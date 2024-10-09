@@ -1,4 +1,4 @@
-import Pages from "./Components/Pages";
+import Pages from "./Pages/Pages";
 
 function App() {
   return (

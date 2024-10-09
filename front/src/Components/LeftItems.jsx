@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import nature from "../assets/nature.jpeg";
 import avatar from "../assets/avatar.jpeg";
 import job from "../assets/job.png";
@@ -6,6 +6,12 @@ import location from "../assets/location.png";
 import { Avatar, Tooltip } from "@mui/material";
 
 const LeftItems = () => {
+
+    const [value, setValue] = useState("");
+
+    const handleChange = (e) => {
+        setValue(e.target.value);
+    }
 
     return (
         <div className="flex flex-col h-screen bg-white pb-4 border-2 rounded-r-xl shadow-lg">
@@ -45,6 +51,12 @@ const LeftItems = () => {
                         Follow
                     </p>
                 </div>
+            <div className="mt-8">
+                <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+                  Friends:{" "}
+                </p>
+                <input className="border-0 outline-none cursor-pointer mt-4" name="input" value={value} type="text" placeholder="Search..." onChange={handleChange}></input>
+            </div>
             </div>
         </div>
     )

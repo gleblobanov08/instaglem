@@ -1,7 +1,8 @@
 import React from "react";
-import Navbar from "./Navbar";
-import LeftItems from "./LeftItems";
-import RightItems from "./RightItems";
+import Navbar from "../Components/Navbar";
+import LeftItems from "../Components/LeftItems";
+import CardSection from "../Components/CardSection";
+import Main from "../Components/Main";
 
 const Home = () => {
     return (
@@ -13,8 +14,11 @@ const Home = () => {
                 <div className="flex-auto w-[20%] fixed top-12">
                     <LeftItems></LeftItems>
                 </div>
-                <div className="flex-auto w-[20%] fixed right-0 top-12">
-                    <RightItems></RightItems>
+            </div>
+            <div className="flex-auto w-[80%] absolute left-[20%] top-12 bg-gray-100 rounded-xl">
+                <div className="w-[90%] mx-auto">
+                    <CardSection></CardSection>
+                    <Main></Main>
                 </div>
             </div>
         </div>
