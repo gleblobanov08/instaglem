@@ -14,7 +14,7 @@ const cardData = [
     id: "2",
     name: "Michael Stevens",
     image: card2,
-    status: "Online",
+    status: "Offline",
   },
   {
     id: "3",
@@ -26,7 +26,7 @@ const cardData = [
     id: "4",
     name: "Miikka O'Connor",
     image: card4,
-    status: "Offline",
+    status: "Online",
   }
 ];
 

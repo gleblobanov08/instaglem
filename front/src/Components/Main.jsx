@@ -13,10 +13,10 @@ const Main = () => {
                     <form className="w-full">
                         <div className="flex justify-between items-center">
                             <div className="w-full ml-4">
-                                <input className="outline-none w-full bg-white rounded-md" type="text" placeholder="What's on your mind, User" />
+                                <input className="outline-none w-full bg-white rounded-md" type="text" placeholder="Share your thoughts..." />
                             </div>
                             <div className="mx-4">
-                                {/* img*/}
+                                {/* img */}
                             </div>
                             <div className="mr-4">
                                 <Button variant="text" type="submit">Post</Button>

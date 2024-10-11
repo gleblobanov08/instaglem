@@ -58,9 +58,7 @@ const UserLinks = () => {
         <Tooltip title="Sign Out" placement="bottom">
             <Avatar src={avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
         </Tooltip>
-        <p className="ml-4 font-roboto text-sm text-black font-medium no-underline">
-          User
-        </p>
+        <p className="ml-4 font-roboto text-sm text-black font-medium no-underline">User</p>
       </div>
     </div>
   );

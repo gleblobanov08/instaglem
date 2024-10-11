@@ -1,8 +1,11 @@
 import Pages from "./Pages/Pages";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
-    <Pages></Pages>
+    <BrowserRouter>
+      <Pages></Pages>
+    </BrowserRouter>
   );
 }
 

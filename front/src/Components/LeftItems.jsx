@@ -6,11 +6,10 @@ import location from "../assets/location.png";
 import { Avatar, Tooltip } from "@mui/material";
 
 const LeftItems = () => {
-
     const [value, setValue] = useState("");
 
-    const handleChange = (e) => {
-        setValue(e.target.value);
+    const handleChange = (event) => {
+        setValue(event.target.value);
     }
 
     return (
@@ -24,12 +23,8 @@ const LeftItems = () => {
                 </div>
             </div> 
             <div className="flex flex-col items-center pt-6">
-                <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none mb-2">
-                    User Email
-                </p>
-                <p className="font-roboto font-bold text-sm text-gray-700 no-underline tracking-normal leading-none py-3">
-                    Become a premium member
-                </p>
+                <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none mb-2">User Email</p>
+                <p className="font-roboto font-bold text-sm text-gray-700 no-underline tracking-normal leading-none py-3">Become a premium member</p>
             </div>
             <div className="flex flex-col pl-2">
                 <div className="flex items-center pb-4">
@@ -41,21 +36,13 @@ const LeftItems = () => {
                     <p className="font-roboto font-bold text-lg no-underline tracking-normal leading-none">Full-time unemployed</p>
                 </div>
                 <div className="flex flex-col justify-center items-center pt-4">
-                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none">
-                        Events
-                    </p>
-                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none my-2">
-                        Groups
-                    </p>
-                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none">
-                        Follow
-                    </p>
+                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none">Events</p>
+                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none my-2">Groups</p>
+                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none">Follow</p>
                 </div>
             <div className="mt-8">
-                <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
-                  Friends:{" "}
-                </p>
-                <input className="border-0 outline-none cursor-pointer mt-4" name="input" value={value} type="text" placeholder="Search..." onChange={handleChange}></input>
+                <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">Friends:{" "}</p>
+                <input className="border-0 outline-none cursor-pointer mt-4" name="input" value={value} type="text" placeholder="Search..." onChange={handleChange} />
             </div>
             </div>
         </div>
