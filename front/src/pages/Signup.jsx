@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, CardContent, CardHeader, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { PacmanLoader } from "react-spinners";
+import { AuthContext } from "../context/AppContext";
+import { auth, onAuthStateChanged } from "../data/firebase";
 
 const Signup = () => {
+    const { signUpWithEmailAndPassword } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate;
+
+    useEffect(() => {
+        setLoading(true);
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                navigate("/");
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
+        })
+    }, [navigate]);
 
     let initialValues = {
         name: "",
@@ -24,11 +40,10 @@ const Signup = () => {
         e.preventDefault();
         const { name, email, password } = formik.values;
         if (formik.isValid === true) {
-          alert('Fuiyoh! Good job kid.');
-          setLoading(true);
+            signUpWithEmailAndPassword(name, email, password);
+            setLoading(true);
         } else {
-          alert("Are u tryin' to trick me or what?");
-          setLoading(false);
+            setLoading(false);
         }
       };
     

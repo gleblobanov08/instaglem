@@ -1,10 +1,13 @@
-import Pages from "./Pages/Pages";
+import Pages from "./pages/Pages";
 import { BrowserRouter } from "react-router-dom";
+import AppContext from "./context/AppContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <Pages></Pages>
+      <AppContext>
+        <Pages></Pages>
+      </AppContext>
     </BrowserRouter>
   );
 }

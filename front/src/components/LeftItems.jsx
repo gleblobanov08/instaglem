@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import nature from "../assets/nature.jpeg";
 import avatar from "../assets/avatar.jpeg";
 import job from "../assets/job.png";
 import location from "../assets/location.png";
 import { Avatar, Tooltip } from "@mui/material";
+import { AuthContext } from "../context/AppContext";
 
 const LeftItems = () => {
     const [value, setValue] = useState("");
+    const { user, userData } = useContext(AuthContext);
 
     const handleChange = (event) => {
         setValue(event.target.value);
@@ -23,7 +25,7 @@ const LeftItems = () => {
                 </div>
             </div> 
             <div className="flex flex-col items-center pt-6">
-                <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none mb-2">User Email</p>
+                <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none mb-2">{user?.email || userData?.email}</p>
                 <p className="font-roboto font-bold text-sm text-gray-700 no-underline tracking-normal leading-none py-3">Become a premium member</p>
             </div>
             <div className="flex flex-col pl-2">

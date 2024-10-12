@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Avatar, Tooltip } from "@mui/material";
 import avatar from "../assets/avatar.jpeg"
+import { AuthContext } from "../context/AppContext";
 
 const UserLinks = () => {
+  const { signOutUser, user, userData } = useContext(AuthContext);
 
   return (
     <div className="flex justify-center items-center cursor-pointer">
@@ -54,11 +56,13 @@ const UserLinks = () => {
           />
         </svg>
       </div>
-      <div className="mx-4 flex items-center">
+      <div className="mx-4 flex items-center" onClick={signOutUser}>
         <Tooltip title="Sign Out" placement="bottom">
             <Avatar src={avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
         </Tooltip>
-        <p className="ml-4 font-roboto text-sm text-black font-medium no-underline">User</p>
+        <p className="ml-4 font-roboto text-sm text-black font-medium no-underline">
+          {user?.displayName === null && userData?.name !== undefined ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1) : user?.displayName?.split(" ")[0]}
+        </p>
       </div>
     </div>
   );

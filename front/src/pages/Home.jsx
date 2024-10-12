@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "../Components/Navbar";
-import LeftItems from "../Components/LeftItems";
-import CardSection from "../Components/CardSection";
-import Main from "../Components/Main";
+import Navbar from "../components/Navbar";
+import LeftItems from "../components/LeftItems";
+import CardSection from "../components/CardSection";
+import Main from "../components/Main";
 
 const Home = () => {
     return (

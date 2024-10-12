@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Card, CardHeader, CardContent, Button, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { PacmanLoader } from "react-spinners";
+import { AuthContext } from "../context/AppContext";
+import { auth, onAuthStateChanged } from "../data/firebase";
    
 const Login = () => {
+    const { signInWithGoogle, loginWithEmailAndPassword } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                navigate("/");
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
+        })
+    }, [navigate])
 
     let initialValues = {
         email: "",
@@ -22,10 +38,9 @@ const Login = () => {
         e.preventDefault();
         const { email, password } = formik.values;
         if (formik.isValid === true) {
-            alert('Fuiyoh! Good job kid.');
+            loginWithEmailAndPassword(email, password);
             setLoading(true);
         } else {
-            alert("Are u tryin' to trick me or what?");
             setLoading(false);
         }
         console.log("formik", formik);
@@ -63,7 +78,7 @@ const Login = () => {
                             <Button variant="contained" fullWidth className="mb-4" type="submit">Login</Button>
                         </form>
                         <div>
-                            <Button variant="contained" fullWidth style={{marginBottom: 30}}>Sign In with Google</Button>
+                            <Button variant="contained" fullWidth style={{marginBottom: 30}} onClick={signInWithGoogle}>Sign In with Google</Button>
                             <Link to="/reset">
                                 <p className="ml-1 font-roboto font-medium text-sm text-blue-500 text-center">Reset password</p>
                             </Link>
