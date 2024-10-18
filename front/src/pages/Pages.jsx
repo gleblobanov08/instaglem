@@ -4,6 +4,7 @@ import Home from "./Home";
 import Login from "./Login";
 import Signup from "./Signup";
 import Reset from "./Reset";
+import Profile from "./Profile";
 
 const Pages = () => {
     return (
@@ -13,6 +14,7 @@ const Pages = () => {
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/signup" element={<Signup />}></Route>
                 <Route path="/reset" element={<Reset />}></Route>
+                <Route path="/profile/:id" element={<Profile />}></Route>
             </Routes>
         </div>
     )

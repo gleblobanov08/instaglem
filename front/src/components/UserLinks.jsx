@@ -58,7 +58,7 @@ const UserLinks = () => {
       </div>
       <div className="mx-4 flex items-center" onClick={signOutUser}>
         <Tooltip title="Sign Out" placement="bottom">
-            <Avatar src={avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
+            <Avatar src={user?.photoURL || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
         </Tooltip>
         <p className="ml-4 font-roboto text-sm text-black font-medium no-underline">
           {user?.displayName === null && userData?.name !== undefined ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1) : user?.displayName?.split(" ")[0]}

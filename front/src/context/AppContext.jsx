@@ -97,7 +97,7 @@ const AppContext = ({ children }) => {
             navigate("/login");
         }
         return () => userStateChanged();
-}, []);
+    }, []);
 
     const initialState = {
         signInWithGoogle: signInWithGoogle,
