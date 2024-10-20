@@ -7,7 +7,7 @@ import { Avatar } from "@mui/material";
 import avatar from "../assets/avatar.jpeg";
 import Comment from "./Comment";
 
-const CommentSection = ({postId}) => {
+const CommentSection = ({ postId }) => {
     const comment = useRef("");
     const {user, userData} = useContext(AuthContext);
     const commentRef = doc(collection(db, "posts", postId, "comments"));

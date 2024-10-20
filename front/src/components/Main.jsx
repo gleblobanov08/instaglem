@@ -154,10 +154,10 @@ const Main = () => {
                 )}
             </div>
             <div ref={scrollRef}>
-                {/* reference for later */}
+                 reference for later
             </div>
         </div>
-    )
+    );
 }
 
 export default Main;

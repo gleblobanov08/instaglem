@@ -43,7 +43,6 @@ const Login = () => {
         } else {
             setLoading(false);
         }
-        console.log("formik", formik);
       };
     
       const formik = useFormik({ initialValues, validationSchema, handleSubmit });
