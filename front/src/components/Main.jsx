@@ -154,7 +154,6 @@ const Main = () => {
                 )}
             </div>
             <div ref={scrollRef}>
-                 reference for later
             </div>
         </div>
     );
