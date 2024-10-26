@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useReducer, useRef, useState } from "react";
 import { Alert, Avatar, Button } from "@mui/material";
-import avatar from "../assets/avatar.jpeg";
-import addImage from "../assets/add-image.png";
-import live from "../assets/live.png";
+import avatar from "../assets/avatar.png";
 import { AuthContext } from "../context/AppContext";
 import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { db } from "../data/firebase";
 import { postActions, PostReducer, postStates } from "../context/PostReducer";
 import Post from "./Post";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
 const Main = () => {
     const [progressBar, setProgressBar] = useState(0);
@@ -125,16 +125,10 @@ const Main = () => {
                 <div className="flex justify-around items-center pt-4">
                     <div className="flex items-center">
                         <label htmlFor="addImage" className="cursor-pointer flex items-center">
-                            <img className="h-10 mr-4" src={addImage} alt="addImage"/>
+                            <FontAwesomeIcon icon={faPaperclip} className="h-6 mr-4"></FontAwesomeIcon>
                             <input id="addImage" type="file" style={{ display: "none" }} onChange={handleUpload}/>
                         </label>
-                        {file && (
-                            <Button variant="text" onClick={handleImageSumbit}>Upload</Button>
-                        )}
-                    </div>
-                    <div className="flex items-center">
-                        <img className="h-10 mr-4" src={live} alt="live" />
-                        <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">Live</p>
+                        <Button variant="text" onClick={handleImageSumbit} disabled={!file}>Upload</Button>
                     </div>
                 </div>
             </div>

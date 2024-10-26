@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useReducer } from "react";
 import { Avatar } from "@mui/material";
-import avatar from "../assets/avatar.jpeg";
+import avatar from "../assets/avatar.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faHeart, faTrash, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AppContext";
@@ -109,7 +109,7 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
           </div>
           {user?.uid !== uid && (
             <div onClick={addUser} className="w-full flex justify-end cursor-pointer mr-10">
-              <FontAwesomeIcon className="h-8" icon={faUserPlus}></FontAwesomeIcon>
+              <FontAwesomeIcon className="h-6" icon={faUserPlus}></FontAwesomeIcon>
             </div>
           )}
         </div>
@@ -123,19 +123,19 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
         </div>
         <div className="flex justify-around items-center pt-4">
           <button className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleLike}>
-            <FontAwesomeIcon className="h-8 mr-4" icon={faHeart}></FontAwesomeIcon>
+            <FontAwesomeIcon className="h-6 mr-4" icon={faHeart}></FontAwesomeIcon>
             {state.likes?.length > 0 && state?.likes?.length}
           </button>
           <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleOpen}>
             <div className="flex items-center cursor-pointer">
-                <FontAwesomeIcon className="h-8 mr-4" icon={faComment}></FontAwesomeIcon>
+                <FontAwesomeIcon className="h-6 mr-4" icon={faComment}></FontAwesomeIcon>
               <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
                 Comments
               </p>
             </div>
           </div>
           <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleDelete}>
-            <FontAwesomeIcon className="h-8 mr-4" icon={faTrash}></FontAwesomeIcon>
+            <FontAwesomeIcon className="h-6 mr-4" icon={faTrash}></FontAwesomeIcon>
             <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
               Delete
             </p>

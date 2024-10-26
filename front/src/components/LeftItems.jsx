@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import background from "../assets/background.jpeg";
-import avatar from "../assets/avatar.jpeg";
+import avatar from "../assets/avatar.png";
 import job from "../assets/job.png";
 import location from "../assets/location.png";
 import { Avatar, Tooltip } from "@mui/material";
@@ -16,8 +16,8 @@ const LeftItems = () => {
     const { user, userData } = useContext(AuthContext);
     const friendList = userData?.friends;
 
-    const handleChange = (event) => {
-        setValue(event.target.value);
+    const handleChange = (e) => {
+        setValue(e.target.value);
     }
 
     const searchFriends = (data) => {

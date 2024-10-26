@@ -4,7 +4,7 @@ import { postActions, PostReducer, postStates } from "../context/PostReducer";
 import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../data/firebase";
 import { Avatar } from "@mui/material";
-import avatar from "../assets/avatar.jpeg";
+import avatar from "../assets/avatar.png";
 import Comment from "./Comment";
 
 const CommentSection = ({ postId }) => {

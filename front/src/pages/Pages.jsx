@@ -5,7 +5,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import Reset from "./Reset";
 import Profile from "./Profile";
-import ChatRoom from "../components/Direct";
+import ChatRoom from "./Direct";
 
 const Pages = () => {
     return (

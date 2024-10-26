@@ -1,5 +1,5 @@
 import React from "react";
-import avatar from "../assets/avatar.jpeg";
+import avatar from "../assets/avatar.png";
 import { Avatar } from "@mui/material";
 
 const Comment = ({ name, comment, image }) => {

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Avatar, Tooltip } from "@mui/material";
-import avatar from "../assets/avatar.jpeg"
+import avatar from "../assets/avatar.png"
 import { AuthContext } from "../context/AppContext";
 
 const UserLinks = () => {
