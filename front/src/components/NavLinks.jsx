@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AppContext";
 
 const NavLinks = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="flex justify-center items-center cursor-pointer">
       <Link to="/">
@@ -22,7 +25,7 @@ const NavLinks = () => {
           </svg>
         </div>
       </Link>
-      <Link to="/chat">
+      <Link to={`/chats/${user?.uid}/`}>
         <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"

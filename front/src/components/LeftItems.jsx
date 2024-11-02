@@ -5,16 +5,17 @@ import job from "../assets/job.png";
 import location from "../assets/location.png";
 import { Avatar, Tooltip } from "@mui/material";
 import { AuthContext } from "../context/AppContext";
-import { arrayRemove, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../data/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCommentDots, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const LeftItems = () => {
     const [value, setValue] = useState("");
     const { user, userData } = useContext(AuthContext);
     const friendList = userData?.friends;
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -33,6 +34,36 @@ const LeftItems = () => {
             friends: arrayRemove({id: id, name: name, image: image})
         })
     }
+
+    const startConversation = async (friendId) => {
+        try {
+            // Check if a chat already exists
+            const chatsRef = collection(db, 'chats');
+            const q = query(chatsRef,  where('users', 'array-contains', user.uid));
+            
+            const querySnapshot = await getDocs(q);
+            let existingChat = null;
+      
+            querySnapshot.forEach((doc) => {
+              const chatData = doc.data()
+              if (chatData.users.includes(friendId)) {
+                existingChat = { id: doc.id, ...chatData }
+              }
+            })
+      
+            if (existingChat) {
+              navigate(`/chat/${existingChat.id}`);
+            } else {
+              const chatRef = await addDoc(chatsRef, {
+                users: [user.uid, friendId],
+                createdAt: serverTimestamp(),
+              })
+              navigate(`/chat/${chatRef.id}`)
+            }
+          } catch (error) {
+            console.error('Error creating/finding chat:', error)
+          }
+        }
 
     return (
         <div className="flex flex-col h-screen bg-white pb-4 border-2 rounded-r-xl shadow-lg">
@@ -77,6 +108,9 @@ const LeftItems = () => {
                                             </div>
                                         </div>
                                     </Link>
+                                    <div className="cursor-pointer" onClick={() => startConversation(friend.id)}>
+                                        <FontAwesomeIcon icon={faCommentDots}></FontAwesomeIcon>
+                                    </div>
                                     <div className="mr-4 cursor-pointer" onClick={() => removeFriend(friend.id, friend.name, friend.image)}>
                                         <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                                     </div>

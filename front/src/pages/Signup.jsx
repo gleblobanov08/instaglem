@@ -10,7 +10,7 @@ import { auth, onAuthStateChanged } from "../data/firebase";
 const Signup = () => {
     const { signUpWithEmailAndPassword } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate;
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);

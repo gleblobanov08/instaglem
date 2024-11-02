@@ -6,6 +6,7 @@ import Signup from "./Signup";
 import Reset from "./Reset";
 import Profile from "./Profile";
 import ChatRoom from "./Direct";
+import UserChats from "./UserChats";
 
 const Pages = () => {
     return (
@@ -16,7 +17,8 @@ const Pages = () => {
                 <Route path="/signup" element={<Signup />}></Route>
                 <Route path="/reset" element={<Reset />}></Route>
                 <Route path="/profile/:id" element={<Profile />}></Route>
-                <Route path="/chat" element={<ChatRoom />}></Route>
+                <Route path="/chats/:userId" element={<UserChats />}></Route>
+                <Route path="/chat/:conversationId" element={<ChatRoom />}></Route>
             </Routes>
         </div>
     )

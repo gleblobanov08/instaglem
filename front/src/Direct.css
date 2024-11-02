@@ -50,6 +50,7 @@
 }
   
 .message {
+    margin: 8px;
     display: flex;
     align-items: center;
 }
