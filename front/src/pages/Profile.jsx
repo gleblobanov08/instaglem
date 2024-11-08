@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { db } from "../data/firebase";
 import Navbar from "../components/Navbar";
 import LeftItems from "../components/LeftItems";
-import Main from "../components/Main";
 import profilePic from "../assets/profilePic.jpeg";
 import avatar from "../assets/avatar.png";
 import { Avatar } from "@mui/material";
@@ -69,7 +68,6 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-                        <Main></Main>
                     </div>
                 </div>
             </div>

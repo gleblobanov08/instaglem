@@ -5,7 +5,7 @@ import job from "../assets/job.png";
 import location from "../assets/location.png";
 import { Avatar, Tooltip } from "@mui/material";
 import { AuthContext } from "../context/AppContext";
-import { addDoc, arrayRemove, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../data/firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -88,14 +88,11 @@ const LeftItems = () => {
                     <img className="h-10" src={job} alt="job" />
                     <p className="font-roboto font-bold text-lg no-underline tracking-normal leading-none">Full-time unemployed</p>
                 </div>
-                <div className="flex flex-col justify-center items-center pt-4">
-                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none">Events</p>
-                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none my-2">Groups</p>
-                    <p className="font-roboto font-bold text-md text-[#0177b7] no-underline tracking-normal leading-none">Follow</p>
-                </div>
                 <div className="mt-8">
-                    <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">Friends:{" "}</p>
-                    <input className="border-0 outline-none cursor-pointer mt-4" name="input" value={value} type="text" placeholder="Search..." onChange={handleChange} />
+                    <div className="mb-4 flex flex-col items-center gap-2">
+                        <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">Friends:{" "}</p>
+                        <input className="border-0 outline-none cursor-pointer mt-4" name="input" value={value} type="text" placeholder="Search..." onChange={handleChange} />
+                    </div>
                     {friendList?.length > 0 ? (
                         searchFriends(friendList)?.map((friend) => {
                             return (
@@ -109,7 +106,7 @@ const LeftItems = () => {
                                         </div>
                                     </Link>
                                     <div className="cursor-pointer" onClick={() => startConversation(friend.id)}>
-                                        <FontAwesomeIcon icon={faCommentDots}></FontAwesomeIcon>
+                                        <FontAwesomeIcon icon={faCommentDots} className="text-blue-300 hover:text-blue-700"></FontAwesomeIcon>
                                     </div>
                                     <div className="mr-4 cursor-pointer" onClick={() => removeFriend(friend.id, friend.name, friend.image)}>
                                         <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>

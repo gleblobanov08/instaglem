@@ -10,7 +10,7 @@ import { db } from "../data/firebase";
 import CommentSection from "./CommentSection";
 
 const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
-  const { user } = useContext(AuthContext);
+  const { user, userData } = useContext(AuthContext);
   const [state, dispatch] = useReducer(PostReducer, postStates);
   const likesRef = doc(collection(db, "posts", id, "likes"));
   const likesCollection = collection(db, "posts", id, "likes");
@@ -20,21 +20,38 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
 
   const handleOpen = (e) => {
     e.preventDefault();
-    setOpen(true);
+    if (open === false) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
   };
 
   const addUser = async () => {
     try {
-      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-      const doc = await getDocs(q);
-      const data = doc.docs[0].ref;
-      await updateDoc(data, {
+      const userQuery = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const userDocs = await getDocs(userQuery);
+      const userRef = userDocs.docs[0].ref;
+
+      const friendQuery = query(collection(db, "users"), where("uid", "==", uid));
+      const friendDocs = await getDocs(friendQuery);
+      const friendRef = friendDocs.docs[0].ref;
+
+      await updateDoc(userRef, {
         friends: arrayUnion({
           id: uid,
           image: logo,
           name: name,
-        }),
+        })
       });
+
+      await updateDoc(friendRef, {
+        friends: arrayUnion({
+          id: user?.uid || userData?.uid,
+          image: user?.photoURL || userData?.photoURL || '',
+          name: user?.name || userData?.name
+        })
+      })
     } catch (err) {
       alert(err.message);
       console.log(err.message);
@@ -123,23 +140,25 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
         </div>
         <div className="flex justify-around items-center pt-4">
           <button className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleLike}>
-            <FontAwesomeIcon className="h-6 mr-4" icon={faHeart}></FontAwesomeIcon>
+            <FontAwesomeIcon className="h-6 mr-4 text-red-700" icon={faHeart}></FontAwesomeIcon>
             {state.likes?.length > 0 && state?.likes?.length}
           </button>
           <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleOpen}>
             <div className="flex items-center cursor-pointer">
-                <FontAwesomeIcon className="h-6 mr-4" icon={faComment}></FontAwesomeIcon>
+                <FontAwesomeIcon className="h-6 mr-4 text-blue-700" icon={faComment}></FontAwesomeIcon>
               <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
                 Comments
               </p>
             </div>
           </div>
-          <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleDelete}>
+          {user?.uid === uid &&
+            <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleDelete}>
             <FontAwesomeIcon className="h-6 mr-4" icon={faTrash}></FontAwesomeIcon>
             <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
               Delete
             </p>
-          </div>
+            </div>
+          }
         </div>
       </div>
       {open && <CommentSection postId={id}></CommentSection>}

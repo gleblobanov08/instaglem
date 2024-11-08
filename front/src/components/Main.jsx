@@ -125,7 +125,7 @@ const Main = () => {
                 <div className="flex justify-around items-center pt-4">
                     <div className="flex items-center">
                         <label htmlFor="addImage" className="cursor-pointer flex items-center">
-                            <FontAwesomeIcon icon={faPaperclip} className="h-6 mr-4"></FontAwesomeIcon>
+                            <FontAwesomeIcon icon={faPaperclip} className="h-6 mr-4 hover:text-blue-900"></FontAwesomeIcon>
                             <input id="addImage" type="file" style={{ display: "none" }} onChange={handleUpload}/>
                         </label>
                         <Button variant="text" onClick={handleImageSumbit} disabled={!file}>Upload</Button>

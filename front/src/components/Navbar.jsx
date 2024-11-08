@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import NavLinks from "./NavLinks";
-import UserLinks from "./UserLinks";
 
 const Navbar = () => {
     return (
@@ -13,9 +12,6 @@ const Navbar = () => {
             </Link>
             <div className="flex justify-center item-center mx-auto">
                 <NavLinks></NavLinks>
-            </div>
-            <div>
-                <UserLinks></UserLinks>
             </div>
         </div>
     )

@@ -53,6 +53,7 @@ const AppContext = ({ children }) => {
                 name,
                 providerId: "email/password",
                 email: user.email,
+                image: ''
             });
         } catch (err) {
             alert(err.message);

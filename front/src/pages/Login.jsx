@@ -55,7 +55,7 @@ const Login = () => {
             </div>) : (
             <div className="grid grid-cols-1 h-screen justify-items-center items-center">
                 <Card sx={{width: "30%"}}>
-                    <CardHeader title="Sign In" style={{width: '90%', margin: '10px auto', padding: '20px 0', borderRadius: 10, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'rgb(59, 108, 246)', color: 'white'}}></CardHeader>
+                    <CardHeader title="Sign In" style={{margin: '16px', padding: '20px 0', borderRadius: 10, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'rgb(59, 108, 246)', color: 'white'}}></CardHeader>
                     <CardContent className="flex w-full flex-col gap-4">
                         <form onSubmit={handleSubmit}>
                             <div className="mb-2">
