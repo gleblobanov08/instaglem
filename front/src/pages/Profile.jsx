@@ -8,6 +8,7 @@ import avatar from "../assets/avatar.png";
 import { Avatar, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Post from "../components/Post";
 
 // Cloudinary upload (or Firebase Storage if preferred)
 const uploadImageToCloudinary = async (file) => {
@@ -28,6 +29,7 @@ const Profile = () => {
   const currentUser = auth.currentUser;
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
   const [editing, setEditing] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState({});
   const [newImageFile, setNewImageFile] = useState(null);
@@ -74,7 +76,6 @@ const Profile = () => {
         });
   
         // Write the updated friends array back to the document
-        //await updateDoc(friendDocRef, { friends: updatedFriendsArray });
         if (JSON.stringify(friendArray) !== JSON.stringify(updatedFriendsArray)) {
           await updateDoc(friendDocRef, { friends: updatedFriendsArray });
         }
@@ -125,7 +126,14 @@ const Profile = () => {
         setProfile(doc.docs[0]?.data());
       });
     };
+    const getUserPosts = async () => {
+      const q = query(collection(db, "posts"), where("uid", "==", id));
+      const querySnapshot = await getDocs(q);
+      const fetchedPosts = querySnapshot.docs.map((doc) => doc.data());
+      setUserPosts(fetchedPosts);
+    }
     getUserProfile();
+    getUserPosts();
   }, [id]);
 
   const isCurrentUser = currentUser?.uid === id;
@@ -170,6 +178,15 @@ const Profile = () => {
                       ) : (
                         <p><span className="font-bold">{profile?.friends?.length}</span> Friends</p>
                       )}
+                    </div>
+                    <div className="mt-4">
+                      {userPosts?.map((post, index) => {
+                        return (
+                          <div key={index}>
+                            <Post id={post?.documentId} uid={post?.uid} logo={post?.logo} name={post?.name} email={post?.email} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} /> 
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 ) : (

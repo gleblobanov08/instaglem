@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useReducer, useRef, useState } from "reac
 import { Alert, Avatar, Button } from "@mui/material";
 import avatar from "../assets/avatar.png";
 import { AuthContext } from "../context/AppContext";
-import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../data/firebase";
 import { postActions, PostReducer, postStates } from "../context/PostReducer";
 import Post from "./Post";
@@ -13,10 +13,11 @@ const Main = () => {
     const [progressBar, setProgressBar] = useState(0);
     const [img, setImg] = useState(null); // To store Cloudinary URL after upload
     const [file, setFile] = useState(null); // Stores the selected file before upload
+    const [posts, setPosts] = useState([]);
     const { user, userData } = useContext(AuthContext);
     const text = useRef("");
     const [state, dispatch] = useReducer(PostReducer, postStates);
-    const { SUBMIT_POST, HANDLE_ERROR } = postActions;
+    const { HANDLE_ERROR } = postActions;
 
     const collectionRef = collection(db, "posts");
     const postRef = doc(collection(db, "posts"));
@@ -73,20 +74,21 @@ const Main = () => {
     };
 
     useEffect(() => {
-        const postData = async () => {
+        const fetchPosts = async () => {
+           try {
             const q = query(collectionRef, orderBy("timestamp", "desc"));
-            await onSnapshot(q, (doc) => {
-                dispatch({
-                    type: SUBMIT_POST,
-                    posts: doc?.docs?.map((item) => item?.data())
-                });
-                setImg(null);
-                setFile(null);
-                setProgressBar(0);
-            });
-        };
-        return () => postData();
-    }, [SUBMIT_POST]);
+            const querySnapshot = await getDocs(q);
+            const fetchedPosts = querySnapshot.docs.map((doc) => doc.data());
+            setPosts(fetchedPosts);
+           } catch (err) {
+                console.log("Error fetching chats: ", err.message);
+           }
+        }
+        fetchPosts();
+        setImg(null);
+        setFile(null);
+        setProgressBar(0);
+    }, [collectionRef])
 
     return (
         <div className="flex flex-col items-center">
@@ -127,9 +129,11 @@ const Main = () => {
                     </div>
                 ) : (
                     <div>
-                        {state?.posts?.length > 0 && state?.posts?.map((post, index) => {
+                        {posts?.map((post, index) => {
                             return (
-                                <Post key={index} id={post?.documentId} uid={post?.uid} logo={post?.logo} name={post?.name} email={post?.email} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
+                                <div key={index}>
+                                    <Post id={post?.documentId} uid={post?.uid} logo={post?.logo} name={post?.name} email={post?.email} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
+                                </div>
                             );
                         })}
                     </div>
