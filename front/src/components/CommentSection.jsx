@@ -20,9 +20,8 @@ const CommentSection = ({ postId }) => {
             try {
                 await setDoc(commentRef, {
                     id: commentRef.id,
+                    authorId: user?.uid || userData?.uid,
                     comment: comment.current.value,
-                    image: user?.photoURL,
-                    name: userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1) || user?.displayName?.split(" ")[0],
                     timestamp: serverTimestamp(),
                 });
                 comment.current.value = "";
@@ -37,8 +36,8 @@ const CommentSection = ({ postId }) => {
     useEffect(() => {
         const getComments = async () => {
             try {
-                const collectionOfComments = collection(db, `posts/${postId}/comments`);
-                const q = query(collectionOfComments, orderBy("timestamp", "desc"));
+                const commentsCollection = collection(db, `posts/${postId}/comments`);
+                const q = query(commentsCollection, orderBy("timestamp", "desc"));
                 await onSnapshot(q, (doc) => {
                     dispatch({
                         type: ADD_COMMENT,
@@ -58,7 +57,7 @@ const CommentSection = ({ postId }) => {
         <div className="flex flex-col bg-white w-full py-2 rounded-b-3xl">
             <div className="flex items-center">
                 <div className="mx-2">
-                    <Avatar size="sm" variant="circular" src={user?.photoURL || avatar} />
+                    <Avatar size="sm" variant="circular" src={userData?.image || avatar} />
                 </div>
                 <div className="w-full pr-2">
                     <form className="flex items-center w-full" onSubmit={addComment}>
@@ -69,7 +68,7 @@ const CommentSection = ({ postId }) => {
             </div>
             {state?.comments?.map((comment, index) => {
                 return (
-                    <Comment key={index} image={comment?.image} name={comment?.name} comment={comment?.comment}></Comment>
+                    <Comment key={index} uid={comment?.authorId} comment={comment?.comment}></Comment>
                 );
             })}
         </div>

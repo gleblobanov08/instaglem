@@ -29,7 +29,7 @@ const NavLinks = () => {
           </div>
         </Tooltip>
       </Link>
-      <Link to={`/chats/${user?.uid}/`}>
+      <Link to={`/chats/${user?.uid}`}>
         <Tooltip title="Your chats" placement="bottom">
           <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
             <svg
@@ -49,7 +49,7 @@ const NavLinks = () => {
           </div>
         </Tooltip>
       </Link>
-      <Link to={`profile/${user?.uid}`}>
+      <Link to={`/profile/${user?.uid}`}>
         <Tooltip title="Profile" placement="bottom">
           <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
             <svg
@@ -89,7 +89,7 @@ const NavLinks = () => {
       </Tooltip>
       <div className="mx-4 flex items-center" onClick={signOutUser}>
         <Tooltip title="Sign Out" placement="bottom">
-            <Avatar src={user?.photoURL || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
+            <Avatar src={userData?.image || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
         </Tooltip>
         <p className="ml-4 font-roboto text-sm text-black font-medium no-underline">
           {user?.displayName === null && userData?.name !== undefined ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1) : user?.displayName?.split(" ")[0]}

@@ -24,8 +24,9 @@ const AppContext = ({ children }) => {
                 await addDoc(collectionUsersRef, {
                     uid: user?.uid,
                     name: user?.displayName,
+                    bio: '',
                     email: user?.email,
-                    image: user?.photoURL,
+                    photoURL: user?.photoURL,
                     authProvider: popup?.providerId,
                 });
             }
@@ -53,7 +54,8 @@ const AppContext = ({ children }) => {
                 name,
                 providerId: "email/password",
                 email: user.email,
-                image: ''
+                photoURL: '',
+                bio: ''
             });
         } catch (err) {
             alert(err.message);

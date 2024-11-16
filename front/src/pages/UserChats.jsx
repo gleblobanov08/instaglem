@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { collection, query, onSnapshot, orderBy, limit, getDocs, where } from 'firebase/firestore';
-import { db, auth } from '../data/firebase';
+import { db } from '../data/firebase';
 import { Link } from 'react-router-dom';
 import avatar from '../assets/avatar.png';
 import '../UserChats.css';
 import Navbar from '../components/Navbar';
+import { AuthContext } from '../context/AppContext';
 
 const UserChats = () => {
   const [chats, setChats] = useState([]);
-  const user = auth.currentUser;
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     if (!user) return;
@@ -79,9 +80,9 @@ const UserChats = () => {
         <Navbar></Navbar>
       </div>
       <div className="chat-lobby">
-        <h2 className="text-2xl font-bold mb-4">Your Chats</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-6">Your Chats</h2>
         {chats.length === 0 ? (
-          <p>No chats found. You can start a new one. </p>
+          <p className="text-center">Loading... Or you can just start a new chat</p>
         ) : (
           <ul className="chat-list">
             {chats.map((chat) => (

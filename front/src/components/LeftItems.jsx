@@ -37,9 +37,8 @@ const LeftItems = () => {
 
     const startConversation = async (friendId) => {
         try {
-            // Check if a chat already exists
-            const chatsRef = collection(db, 'chats');
-            const q = query(chatsRef,  where('users', 'array-contains', user.uid));
+            const chatsRef = collection(db, "chats");
+            const q = query(chatsRef, where("users", "array-contains", user?.uid));
             
             const querySnapshot = await getDocs(q);
             let existingChat = null;
@@ -71,7 +70,7 @@ const LeftItems = () => {
                 <img className="h-28 w-full rounded-r-xl" src={background} alt="nat" />
                 <div className="absolute -bottom-4">
                     <Tooltip title="Profile" placement="top">
-                        <Avatar src={user?.photoURL || avatar} sx={{height: 46, width: 46}} alt="avatar"></Avatar>
+                        <Avatar src={userData?.image || avatar} sx={{height: 46, width: 46}} alt="avatar"></Avatar>
                     </Tooltip>
                 </div>
             </div> 

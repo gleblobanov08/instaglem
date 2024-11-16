@@ -34,21 +34,22 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
       const userRef = userDocs.docs[0].ref;
 
       const friendQuery = query(collection(db, "users"), where("uid", "==", uid));
-      const friendDocs = await getDocs(friendQuery);
-      const friendRef = friendDocs.docs[0].ref;
+      const friendDoc = await getDocs(friendQuery);
+      const friendRef = friendDoc.docs[0].ref;
+      const friendData = friendDoc.docs[0].data();
 
       await updateDoc(userRef, {
         friends: arrayUnion({
-          id: uid,
-          image: logo,
-          name: name,
+          id: friendData.uid,
+          image: friendData.image,
+          name: friendData.name,
         })
       });
 
       await updateDoc(friendRef, {
         friends: arrayUnion({
           id: user?.uid || userData?.uid,
-          image: user?.photoURL || userData?.photoURL || '',
+          image: user?.photoURL || userData?.image || '',
           name: user?.name || userData?.name
         })
       })
@@ -116,12 +117,12 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
       <div className="flex flex-col py-4 bg-white rounded-t-3xl">
         <div className="flex justify-start items-center pb-4 pl-4 ">
           <Avatar size="sm" variant="circular" src={logo || avatar} alt="avatar"></Avatar>
-          <div className="flex flex-col ml-4">
-            <p className=" py-2 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
-              {email}
+          <div className="flex flex-col ml-4 w-[70%]">
+            <p className="py-2 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+              {name}
             </p>
-            <p className=" font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
-              Uploaded: {timestamp}
+            <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+              {timestamp}
             </p>
           </div>
           {user?.uid !== uid && (
@@ -131,11 +132,11 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
           )}
         </div>
         <div>
-          <p className="ml-4 pb-4 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+          <p className="ml-6 pb-4 font-roboto font-medium text-lg text-gray-700 no-underline tracking-normal leading-none">
             {text}
           </p>
           {image && (
-            <img className="h-[500px] w-full" src={image} alt="postImage"></img>
+            <img className="h-[60%] w-[60%] mx-auto" src={image} alt="postImage"></img>
           )}
         </div>
         <div className="flex justify-around items-center pt-4">
