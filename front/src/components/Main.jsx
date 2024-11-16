@@ -30,7 +30,7 @@ const Main = () => {
         if (!file) return;
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', 'ml_default'); // Replace with your Cloudinary unsigned preset name
+        formData.append('upload_preset', 'ml_default');
 
         try {
             const response = await fetch(`https://api.cloudinary.com/v1_1/dsyabbqdw/image/upload`, {
@@ -39,7 +39,7 @@ const Main = () => {
             });
             const data = await response.json();
             setImg(data.secure_url); // Set the Cloudinary URL for use in the post
-            setProgressBar(100); // Set progress bar to complete on success
+            setProgressBar(100);
         } catch (err) {
             dispatch({ type: HANDLE_ERROR });
             alert("Image upload failed. " + err.message);

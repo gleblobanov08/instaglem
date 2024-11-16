@@ -158,7 +158,7 @@ const Profile = () => {
                     <div className="flex justify-between items-start mb-4">
                       <Avatar sx={{ width: 52, height: 52 }} src={profile?.image || avatar} alt="avatar" />
                       {isCurrentUser && (
-                        <Button onClick={handleEdit}>Edit profile</Button>
+                        <Button onClick={handleEdit}>Edit</Button>
                       )}
                     </div>
                     <h2 className="text-xl font-bold">{profile?.name}</h2>
@@ -181,8 +181,10 @@ const Profile = () => {
                         <Button variant="contained" component="span">Change Image</Button>
                       </label>
                     </div>
-                    <input name="name" value={updatedProfile?.name || ''} onChange={handleChange} placeholder="Name" />
-                    <textarea name="bio" value={updatedProfile?.bio || ''} onChange={handleChange} placeholder="Bio" />
+                    <div className="flex flex-col justify-center gap-4">
+                      <input className="p-2 w-[50%] border-none outline-none cursor-pointer" name="name" value={updatedProfile?.name || ''} onChange={handleChange} placeholder="Name" />
+                      <textarea className="p-2 w-[50%] border-none outline-none cursor-pointer" name="bio" value={updatedProfile?.bio || ''} onChange={handleChange} placeholder="Bio" />
+                    </div>
                     <div className="flex gap-2 mt-4">
                       <Button onClick={handleSave}>Save</Button>
                       <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
