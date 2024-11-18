@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import background from "../assets/background.jpeg";
 import avatar from "../assets/avatar.png";
 import job from "../assets/job.png";
 import location from "../assets/location.png";
@@ -65,56 +64,59 @@ const LeftItems = () => {
         }
 
     return (
-        <div className="flex flex-col h-screen bg-white pb-4 border-2 rounded-r-xl shadow-lg">
-            <div className="flex flex-col items-center relative">
-                <img className="h-28 w-full rounded-r-xl" src={background} alt="nat" />
-                <div className="absolute -bottom-4">
+        <div className="flex flex-col h-screen bg-white pb-4 px-1 border-none rounded-r-xl shadow-lg">
+            <div className="flex flex-col items-center">
+                <div className="mt-4">
                     <Tooltip title="Profile" placement="top">
                         <Avatar src={userData?.image || avatar} sx={{height: 46, width: 46}} alt="avatar"></Avatar>
                     </Tooltip>
                 </div>
             </div> 
             <div className="flex flex-col items-center pt-6">
-                <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none mb-2">{user?.email || userData?.email}</p>
-                <p className="font-roboto font-bold text-sm text-gray-700 no-underline tracking-normal leading-none py-3">Become a premium member</p>
+                <p className="hidden sm:block font-roboto font-medium text-xs sm:text-sm md:text-md xl:text-lg text-gray-700 no-underline tracking-normal leading-none mb-2">{user?.email || userData?.email}</p>
+                <p className="font-roboto font-bold text-sm text-center text-gray-700 no-underline tracking-normal py-3">Become a premium member</p>
             </div>
             <div className="flex flex-col pl-2">
-                <div className="flex items-center pb-4">
-                    <img className="h-10" src={location} alt="location" />
-                    <p className="font-roboto font-bold text-lg no-underline tracking-normal leading-none">Wakanda</p>
+                <div className="hidden sm:flex items-center pb-4">
+                    <img className="h-10 mr-2" src={location} alt="location" />
+                    <p className="font-roboto font-bold text-sm md:text-md lg:text-lg no-underline tracking-normal leading-none">Wakanda</p>
                 </div>
-                <div className="flex items-center">
-                    <img className="h-10" src={job} alt="job" />
-                    <p className="font-roboto font-bold text-lg no-underline tracking-normal leading-none">Full-time unemployed</p>
+                <div className="hidden sm:flex items-center">
+                    <img className="h-10 mr-2" src={job} alt="job" />
+                    <p className="font-roboto font-bold text-sm md:text-md lg:text-lg no-underline tracking-normal leading-none">Full-time unemployed</p>
                 </div>
                 <div className="mt-8">
                     <div className="mb-4 flex flex-col items-center gap-2">
-                        <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">Friends:{" "}</p>
-                        <input className="border-0 outline-none cursor-pointer mt-4" name="input" value={value} type="text" placeholder="Search..." onChange={handleChange} />
+                        <p className="font-roboto font-medium text-sm md:text-md text-gray-700 no-underline tracking-normal leading-none">Friends:{" "}</p>
+                        <input className="w-[80%] text-center md:text-left text-sm md:text-md border-0 outline-none mt-4" name="input" value={value} type="text" placeholder="Search..." onChange={handleChange} />
                     </div>
                     {friendList?.length > 0 ? (
                         searchFriends(friendList)?.map((friend) => {
                             return (
-                                <div className="flex items-center justify-between hover:bg-gray-100 duration-300 ease-in-out" key={friend.id}>
-                                    <Link to={`/profile/${friend.id}`}>
-                                        <div className="flex items-center my-2 cursor-pointer">
-                                            <div className="flex items-center">
-                                                <Avatar size="sm" variant="circular" src={friend?.image || avatar} alt="avatar" />
-                                                <p className="ml-4 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">{friend.name}</p>
+                                <div className="mr-1 md:mr-2 lg:mr-4 flex flex-wrap items-center justify-between hover:bg-gray-100 duration-300 ease-in-out" key={friend.id}>
+                                    <div className="w-full sm:w-auto">
+                                        <Link to={`/profile/${friend.id}`}>
+                                            <div className="flex items-center my-2 cursor-pointer justify-center">
+                                                <div className="flex items-center">
+                                                    <Avatar size="sm" variant="circular" src={friend?.image || avatar} alt="avatar" />
+                                                    <p className="hidden sm:block ml-4 font-roboto font-medium text-xs md:text-sm text-gray-700 no-underline tracking-normal leading-none">{friend.name}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                    <div className="cursor-pointer" onClick={() => startConversation(friend.id)}>
-                                        <FontAwesomeIcon icon={faCommentDots} className="text-blue-300 hover:text-blue-700"></FontAwesomeIcon>
+                                        </Link>
                                     </div>
-                                    <div className="mr-4 cursor-pointer" onClick={() => removeFriend(friend.id, friend.name, friend.image)}>
-                                        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                                    <div className="w-full sm:w-auto flex justify-center gap-4">
+                                        <div className="cursor-pointer" onClick={() => startConversation(friend.id)}>
+                                            <FontAwesomeIcon icon={faCommentDots} className="text-blue-300 hover:text-blue-700"></FontAwesomeIcon>
+                                        </div>
+                                        <div className="cursor-pointer" onClick={() => removeFriend(friend.id, friend.name, friend.image)}>
+                                            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                                        </div>
                                     </div>
                                 </div>
                             );
                         })
                     ) : (
-                        <p className="mt-10 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">Add friends to check their profile</p>
+                        <p className="mt-10 font-roboto font-medium text-sm text-center text-gray-700 no-underline tracking-normal">Add friends to check their profile</p>
                      )}
                 </div>
             </div>

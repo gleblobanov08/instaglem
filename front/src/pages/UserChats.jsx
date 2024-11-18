@@ -80,7 +80,7 @@ const UserChats = () => {
         <Navbar></Navbar>
       </div>
       <div className="chat-lobby">
-        <h2 className="text-2xl font-bold mt-10 mb-6">Your Chats</h2>
+        <h2 className="text-2xl font-bold mt-12 mb-6">Your Chats</h2>
         {chats.length === 0 ? (
           <p className="text-center">Your chats are loading... Or you can just start a new one</p>
         ) : (

@@ -117,45 +117,45 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
       <div className="flex flex-col py-4 bg-white rounded-t-3xl">
         <div className="flex justify-start items-center pb-4 pl-4 ">
           <Avatar size="sm" variant="circular" src={logo || avatar} alt="avatar"></Avatar>
-          <div className="flex flex-col ml-4 w-[70%]">
-            <p className="py-2 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+          <div className="flex flex-col ml-4 w-[90%]">
+            <p className="py-2 font-roboto font-medium text-xs sm:text-sm text-gray-700 no-underline tracking-normal leading-none">
               {name}
             </p>
-            <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+            <p className="hidden sm:block font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
               {timestamp}
             </p>
           </div>
           {user?.uid !== uid && (
-            <div onClick={addUser} className="w-full flex justify-end cursor-pointer mr-10">
-              <FontAwesomeIcon className="h-6" icon={faUserPlus}></FontAwesomeIcon>
+            <div onClick={addUser} className="flex justify-end cursor-pointer mr-4 sm:mr-10">
+              <FontAwesomeIcon className="h-5 sm:h-6" icon={faUserPlus}></FontAwesomeIcon>
             </div>
           )}
         </div>
-        <div>
-          <p className="ml-6 pb-4 font-roboto font-medium text-lg text-gray-700 no-underline tracking-normal leading-none">
+        <div className="px-4">
+          <p className="ml-3 sm:ml-6 pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
           {image && (
-            <img className="h-[60%] w-[60%] mx-auto" src={image} alt="postImage"></img>
+            <img className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" src={image} alt="postImage"></img>
           )}
         </div>
         <div className="flex justify-around items-center pt-4">
           <button className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleLike}>
-            <FontAwesomeIcon className="h-6 mr-4 text-red-700" icon={faHeart}></FontAwesomeIcon>
+            <FontAwesomeIcon className="h-5 sm:h-6 mr-3 sm:mr-4 text-red-700" icon={faHeart}></FontAwesomeIcon>
             {state.likes?.length > 0 && state?.likes?.length}
           </button>
           <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleOpen}>
             <div className="flex items-center cursor-pointer">
-                <FontAwesomeIcon className="h-6 mr-4 text-blue-700" icon={faComment}></FontAwesomeIcon>
-              <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
+                <FontAwesomeIcon className="h-5 sm:h-6 mr-3 sm:mr-4 text-blue-700" icon={faComment}></FontAwesomeIcon>
+              <p className="hidden sm:block font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
                 Comments
               </p>
             </div>
           </div>
           {user?.uid === uid &&
             <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleDelete}>
-            <FontAwesomeIcon className="h-6 mr-4" icon={faTrash}></FontAwesomeIcon>
-            <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
+            <FontAwesomeIcon className="h-5 sm:h-6 mr-3 sm:mr-4" icon={faTrash}></FontAwesomeIcon>
+            <p className="hidden sm:block font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
               Delete
             </p>
             </div>

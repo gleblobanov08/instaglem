@@ -30,8 +30,8 @@ const Comment = ({ uid, comment }) => {
         <Avatar size="sm" alt="avatar" variant="circular" src={author.image || avatar} />
       </div>
       <div className="flex flex-col items-start bg-gray-100 rounded-2xl p-1 max-w-[600px]">
-        <p className="font-roboto text-black text-sm no-underline tracking-normal leading-none p-1 font-medium">{author.name}</p>
-        <p className="font-roboto text-black text-sm no-underline tracking-normal leading-none p-1 font-medium">{comment}</p>
+        <p className="font-roboto text-black text-xs sm:text-sm no-underline tracking-normal leading-none p-1 font-medium">{author.name}</p>
+        <p className="font-roboto text-black text-xs sm:text-sm no-underline tracking-normal leading-none p-1 font-medium">{comment}</p>
       </div>
     </div>
   );

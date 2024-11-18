@@ -144,42 +144,42 @@ const Profile = () => {
         <Navbar />
       </div>
       <div className="flex bg-gray-100">
-        <div className="flex-auto w-[25%] fixed top-12">
+        <div className="flex-auto w-[30%] md:w-[25%] fixed top-12">
           <LeftItems />
         </div>
-        <div className="flex-auto w-[75%] absolute left-[25%] top-12 bg-gray-100 rounded-xl">
-          <div className="w-[80%] mx-auto">
+        <div className="flex-auto w-[70%] md:w-[75%] absolute left-[30%] md:left-[25%] top-10 bg-gray-100 rounded-xl">
+          <div className="w-[90%] mx-auto">
             <div>
-              <div className="border-b border-gray-200 py-4 flex items-center">
+              <div className="border-b border-gray-200 ml-2 sm:ml-4 py-3 sm:py-4 flex items-center">
                 <Link to="/">
-                  <Button variant="ghost" size="icon" className="mr-2">
-                    <FontAwesomeIcon className="h-6" icon={faArrowLeft} />
-                  </Button>
+                  <FontAwesomeIcon className="h-5 sm:h-6" icon={faArrowLeft} />
                 </Link>
-                <div>
-                  <h1 className="text-xl font-bold">Profile</h1>
+                <div className="ml-4 sm:mr-6">
+                  <h1 className="text-lg sm:text-xl font-bold">Profile</h1>
                 </div>
               </div>
-              <div className="p-4">
-                {!editing ? (
+              <div className="w-full">
+                {!editing || !isCurrentUser ? (
                   <div>
-                    <div className="flex justify-between items-start mb-4">
+                    <div className="flex justify-center sm:justify-between gap-6 items-center py-4">
                       <Avatar sx={{ width: 52, height: 52 }} src={profile?.image || avatar} alt="avatar" />
                       {isCurrentUser && (
                         <Button onClick={handleEdit}>Edit</Button>
                       )}
                     </div>
-                    <h2 className="text-xl font-bold">{profile?.name}</h2>
-                    <p className="text-gray-500">{profile?.email}</p>
-                    <p className="mt-2">{profile?.bio}</p>
-                    <div className="flex gap-4 mt-4">
+                    <div className="text-center sm:text-left">
+                      <h2 className="text-xl font-bold">{profile?.name}</h2>
+                      <p className="text-gray-500">{profile?.email}</p>
+                      <p className="mt-2">{profile?.bio}</p>
+                    </div>
+                    <div className="flex justify-center sm:justify-start gap-4 mt-4">
                       {profile?.friends?.length === 1 ? (
                         <p><span className="font-bold">1</span> Friend</p>
                       ) : (
                         <p><span className="font-bold">{profile?.friends?.length}</span> Friends</p>
                       )}
                     </div>
-                    <div className="mt-4">
+                    <div className="my-4">
                       {userPosts?.map((post, index) => {
                         return (
                           <div key={index}>
@@ -187,23 +187,26 @@ const Profile = () => {
                           </div>
                         )
                       })}
+                      {userPosts.length === 0 && <p className="text-center">No posts found</p>}
                     </div>
                   </div>
                 ) : (
                   <div>
-                    <div className="flex items-center mb-4">
+                    <div className="flex items-center py-4">
                       <Avatar sx={{ width: 52, height: 52 }} src={updatedProfile.image || avatar} alt="avatar" />
-                      <label htmlFor="image-upload" className="ml-4">
-                        <input id="image-upload" type="file" onChange={handleImageChange} style={{ display: 'none' }} />
-                        <Button variant="contained" component="span">Change Image</Button>
-                      </label>
+                      <div className="w-24 sm:w-auto">
+                        <label htmlFor="image-upload" className="ml-4 text-center">
+                          <input id="image-upload" type="file" onChange={handleImageChange} style={{ display: 'none' }} />
+                          <Button variant="contained" component="span">Change Image</Button>
+                        </label>
+                      </div>
                     </div>
                     <div className="flex flex-col justify-center gap-4">
-                      <input className="p-2 w-[50%] border-none outline-none cursor-pointer" name="name" value={updatedProfile?.name || ''} onChange={handleChange} placeholder="Name" />
-                      <textarea className="p-2 w-[50%] border-none outline-none cursor-pointer" name="bio" value={updatedProfile?.bio || ''} onChange={handleChange} placeholder="Bio" />
+                      <input className="p-2 w-[90%] md:w-[60%] border-none outline-none cursor-pointer" name="name" value={updatedProfile?.name || ''} onChange={handleChange} placeholder="Name" />
+                      <textarea className="p-2 w-[90%] md:w-[60%] border-none outline-none resize-none cursor-pointer" name="bio" value={updatedProfile?.bio || ''} onChange={handleChange} placeholder="Bio" />
                     </div>
-                    <div className="flex gap-2 mt-4">
-                      <Button onClick={handleSave}>Save</Button>
+                    <div className="flex gap-2 my-4">
+                      <Button variant="contained" onClick={handleSave}>Save</Button>
                       <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer, useRef, useState } from "react";
-import { Alert, Avatar, Button } from "@mui/material";
+import { Alert, Avatar, Button, Input } from "@mui/material";
 import avatar from "../assets/avatar.png";
 import { AuthContext } from "../context/AppContext";
 import { collection, doc, getDocs, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
@@ -7,7 +7,7 @@ import { db } from "../data/firebase";
 import { postActions, PostReducer, postStates } from "../context/PostReducer";
 import Post from "./Post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import { faPaperclip, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const Main = () => {
     const [progressBar, setProgressBar] = useState(0);
@@ -90,29 +90,34 @@ const Main = () => {
         setProgressBar(0);
     }, [collectionRef])
 
+    const isDisabled = !text.current.value;
+
     return (
         <div className="flex flex-col items-center">
-            <div className="flex flex-col py-4 w-full bg-white rounded-3xl shadow-lg">
-                <div className="flex items-center border-b-2 border-gray-300 pb-4 pl-4 w-full">
-                    <Avatar size="sm" variant="circular" src={userData?.image || avatar} alt="avatar"></Avatar>
+            <div className="flex flex-col py-3 sm:py-4 w-full bg-white rounded-3xl shadow-lg">
+                <div className="flex items-center border-b-2 border-gray-300 pb-4 pl-2 sm:pl-4 w-full">
+                    <Avatar size="sm" variant="circular" src={userData?.image || avatar} alt="avatar" />
                     <form className="w-full" onSubmit={handlePostSubmit}>
                         <div className="flex justify-between items-center">
                             <div className="w-full ml-4">
-                                <input className="outline-none w-full bg-white rounded-md" type="text" placeholder="Share your thoughts..." ref={text} />
+                                {/*<input className="outline-none w-full bg-white rounded-md tracking-wide sm:tracking-normal" type="text" placeholder="What's going on?" ref={text} />*/}
+                                <Input sx={{fontSize: '15px'}} disableUnderline="true" placeholder="What's going on?" ref={text}/>
                             </div>
-                            <div className="mx-4">
+                            <div className="hidden sm:block mx-4">
                                 {img && (
                                     <img className="h-12 rounded-xl" src={img} alt="previewImage" />
                                 )}
                             </div>
                             <div className="mr-4">
-                                <Button variant="text" type="submit">Post</Button>
+                                <button type="submit" disabled={isDisabled}>
+                                    <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{color: isDisabled ? "#74C0FC" : "#2071c9"}} />
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
                 <span style={{ width: `${progressBar}%` }} className="bg-blue-700 py-1 rounded-md"></span>
-                <div className="flex justify-around items-center pt-4">
+                <div className="flex justify-around items-center pt-2 sm:pt-4">
                     <div className="flex items-center">
                         <label htmlFor="addImage" className="cursor-pointer flex items-center">
                             <FontAwesomeIcon icon={faPaperclip} className="h-6 mr-4 hover:text-blue-900"></FontAwesomeIcon>
