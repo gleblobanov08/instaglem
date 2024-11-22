@@ -5,14 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faHeart, faTrash, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AppContext";
 import { PostReducer, postActions, postStates } from "../context/PostReducer";
-import { doc, setDoc, collection, query, onSnapshot, where, getDocs, updateDoc, arrayUnion, deleteDoc,} from "firebase/firestore";
+import { doc, setDoc, collection, query, onSnapshot, where, getDocs, updateDoc, arrayUnion, deleteDoc} from "firebase/firestore";
 import { db } from "../data/firebase";
 import CommentSection from "./CommentSection";
 
-const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
+const Post = ({ uid, id, text, image, timestamp }) => {
   const { user, userData } = useContext(AuthContext);
+  const [author, setAuthor] = useState({});
   const [state, dispatch] = useReducer(PostReducer, postStates);
-  const likesRef = doc(collection(db, "posts", id, "likes"));
   const likesCollection = collection(db, "posts", id, "likes");
   const singlePostDocument = doc(db, "posts", id);
   const { ADD_LIKE, HANDLE_ERROR } = postActions;
@@ -69,7 +69,7 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
         const deleteId = doc(db, "posts", id, "likes", likesDocId);
         await deleteDoc(deleteId);
       } else {
-        await setDoc(likesRef, {
+        await setDoc(doc(likesCollection), {
           id: user?.uid,
         });
       }
@@ -94,6 +94,19 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
   };
 
   useEffect(() => {
+    const getPostAuthor = async () => {
+      const q = query(collection(db, "users"), where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        setAuthor(querySnapshot.docs[0].data());
+      }
+    };
+
+    getPostAuthor();
+  }, [uid]);
+
+  useEffect(() => {
     const getLikes = async () => {
       try {
         const q = collection(db, "posts", id, "likes");
@@ -114,12 +127,12 @@ const Post = ({ uid, id, logo, name, email, text, image, timestamp }) => {
 
   return (
     <div className="mb-4">
-      <div className="flex flex-col py-4 bg-white rounded-t-3xl">
+      <div className="flex flex-col py-4 bg-white rounded-2xl">
         <div className="flex justify-start items-center pb-4 pl-4 ">
-          <Avatar size="sm" variant="circular" src={logo || avatar} alt="avatar"></Avatar>
+          <Avatar className="h-6" variant="circular" src={author.image || avatar} alt="avatar"></Avatar>
           <div className="flex flex-col ml-4 w-[90%]">
             <p className="py-2 font-roboto font-medium text-xs sm:text-sm text-gray-700 no-underline tracking-normal leading-none">
-              {name}
+              {author.name}
             </p>
             <p className="hidden sm:block font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
               {timestamp}

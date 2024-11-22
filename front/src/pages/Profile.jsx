@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { collection, getDocs, onSnapshot, query, where, updateDoc } from "firebase/firestore";
+import React, { useEffect, useState, useMemo } from "react";
+import { collection, getDocs, onSnapshot, query, where, updateDoc, limit } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 import { auth, db } from "../data/firebase";
 import Navbar from "../components/Navbar";
@@ -10,11 +10,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Post from "../components/Post";
 
-// Cloudinary upload (or Firebase Storage if preferred)
 const uploadImageToCloudinary = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "ml_default"); // Replace with your Cloudinary preset
+  formData.append("upload_preset", "ml_default");
 
   const response = await fetch(`https://api.cloudinary.com/v1_1/dsyabbqdw/image/upload`, {
     method: "POST",
@@ -25,7 +24,6 @@ const uploadImageToCloudinary = async (file) => {
 };
 
 const Profile = () => {
-  //const { currentUser } = useContext(AuthContext);
   const currentUser = auth.currentUser;
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
@@ -33,7 +31,10 @@ const Profile = () => {
   const [editing, setEditing] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState({});
   const [newImageFile, setNewImageFile] = useState(null);
-    
+  const [previewImage, setPreviewImage] = useState("");
+
+  const isCurrentUser = useMemo(() => currentUser?.uid === id, [currentUser, id]);
+
   const handleEdit = () => {
     setEditing(true);
     setUpdatedProfile(profile);
@@ -43,6 +44,7 @@ const Profile = () => {
     setEditing(false);
     setUpdatedProfile(profile);
     setNewImageFile(null);
+    setPreviewImage("");
   };
 
   const handleChange = (e) => {
@@ -50,7 +52,20 @@ const Profile = () => {
   };
 
   const handleImageChange = (e) => {
-    setNewImageFile(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (file && file instanceof File) {
+      setNewImageFile(file);
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewImage(objectUrl);
+    } else {
+      console.log("invalid file selected");
+    }
+  };
+
+  const removeProfilePicture = () => {
+    setUpdatedProfile({ ...updatedProfile, image: "" });
+    setPreviewImage("");
+    setNewImageFile(null);
   };
 
   const updateFriendsList = async (uid, updatedName, updatedImage) => {
@@ -63,24 +78,17 @@ const Profile = () => {
         const friendDocRef = userDoc.ref;
         const friendArray = friendData.friends || [];
 
-        // Map over the friends array to update the existing friend information
         const updatedFriendsArray = friendArray.map((friend) => {
           if (friend.id === uid) {
-            return {
-              ...friend,
-              name: updatedName,
-              image: updatedImage,
-            };
+            return { ...friend, name: updatedName, image: updatedImage };
           }
-          return friend; // Leave other friends unchanged
+          return friend;
         });
-  
-        // Write the updated friends array back to the document
+
         if (JSON.stringify(friendArray) !== JSON.stringify(updatedFriendsArray)) {
           await updateDoc(friendDocRef, { friends: updatedFriendsArray });
         }
       });
-      console.log("Friends lists updated successfully.");
     } catch (error) {
       console.error("Error updating friends lists:", error);
     }
@@ -96,23 +104,20 @@ const Profile = () => {
         return;
       }
 
-      const userDocRef = userSnapshot.docs[0].ref; // Get the first matched document reference
+      const userDocRef = userSnapshot.docs[0].ref;
 
-      // If there's a new profile image file, upload it to Cloudinary
       let imageUrl = updatedProfile.image;
       if (newImageFile) {
         imageUrl = await uploadImageToCloudinary(newImageFile);
       }
 
-      await updateDoc(userDocRef, {
-        ...updatedProfile,
-        image: imageUrl, // Update image URL if new image was uploaded
-      });
+      await updateDoc(userDocRef, { ...updatedProfile, image: imageUrl });
 
       await updateFriendsList(profile.uid, updatedProfile.name, imageUrl);
       setEditing(false);
       setProfile({ ...updatedProfile, image: imageUrl });
       setNewImageFile(null);
+      setPreviewImage("");
     } catch (err) {
       console.error("Error updating profile:", err);
       alert("Failed to save changes. Please try again.");
@@ -126,93 +131,92 @@ const Profile = () => {
         setProfile(doc.docs[0]?.data());
       });
     };
-    const getUserPosts = async () => {
-      const q = query(collection(db, "posts"), where("uid", "==", id));
-      const querySnapshot = await getDocs(q);
-      const fetchedPosts = querySnapshot.docs.map((doc) => doc.data());
-      setUserPosts(fetchedPosts);
-    }
+
+    const getUserPosts = () => {
+      const q = query(collection(db, "posts"), where("uid", "==", id), limit(10));
+      onSnapshot(q, (doc) => {
+        setUserPosts(doc.docs.map((item) => item.data()));
+      });
+    };
+
     getUserProfile();
     getUserPosts();
+
   }, [id]);
 
-  const isCurrentUser = currentUser?.uid === id;
+  useEffect(() => {
+    return () => {
+      if (previewImage) {
+        URL.revokeObjectURL(previewImage);
+      }
+    }
+  }, [previewImage])
 
   return (
     <div className="w-full">
-      <div className="fixed top-0 z-10 w-full bg-white">
-        <Navbar />
-      </div>
+        <div className="fixed top-0 z-10 w-full bg-white">
+            <Navbar />
+        </div>
       <div className="flex bg-gray-100">
         <div className="flex-auto w-[30%] md:w-[25%] fixed top-12">
-          <LeftItems />
+            <LeftItems />
         </div>
-        <div className="flex-auto w-[70%] md:w-[75%] absolute left-[30%] md:left-[25%] top-10 bg-gray-100 rounded-xl">
-          <div className="w-[90%] mx-auto">
-            <div>
-              <div className="border-b border-gray-200 ml-2 sm:ml-4 py-3 sm:py-4 flex items-center">
+        <div className="flex-auto w-[70%] md:w-[75%] absolute left-30% md:left-[25%] top-10 bg-gray-100 rounded-xl">
+          <div className="w-[90%] mx-auto py-2">
+              <div className="border-b border-gray-200 ml-2 sm:ml-4 py-4 flex items-center">
                 <Link to="/">
                   <FontAwesomeIcon className="h-5 sm:h-6" icon={faArrowLeft} />
                 </Link>
-                <div className="ml-4 sm:mr-6">
-                  <h1 className="text-lg sm:text-xl font-bold">Profile</h1>
+                <div className="ml-4 sm:ml-6">
+                    <h1 className="text-lg sm:text-xl font-bold">Profile</h1>
                 </div>
               </div>
               <div className="w-full">
                 {!editing || !isCurrentUser ? (
-                  <div>
-                    <div className="flex justify-center sm:justify-between gap-6 items-center py-4">
-                      <Avatar sx={{ width: 52, height: 52 }} src={profile?.image || avatar} alt="avatar" />
-                      {isCurrentUser && (
-                        <Button onClick={handleEdit}>Edit</Button>
-                      )}
+                    <div>
+                        <div className="flex justify-center sm:justify-between gap-6 items-center py-4">
+                            <Avatar sx={{ width: 52, height: 52 }} src={profile?.image || avatar} />
+                            {isCurrentUser && <Button onClick={handleEdit}>Edit</Button>}
+                        </div>
+                        <div className="text-center sm:text-left">
+                            <h2 className="text-xl font-bold">{profile?.name}</h2>
+                            <p className="text-gray-500">{profile?.email}</p>
+                            <p className="mt-2">{profile?.bio}</p>
+                        </div>                    
+                        <div className="flex justify-center sm:justify-start gap-4 mt-4">
+                            <span className="font-bold">{profile?.friends?.length}</span> Friends
+                        </div>
+                        <div className="my-4">
+                            {userPosts.map((post, index) => (
+                                <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
+                            ))}
+                            {userPosts.length === 0 && <p>No posts found</p>}
+                        </div>
                     </div>
-                    <div className="text-center sm:text-left">
-                      <h2 className="text-xl font-bold">{profile?.name}</h2>
-                      <p className="text-gray-500">{profile?.email}</p>
-                      <p className="mt-2">{profile?.bio}</p>
-                    </div>
-                    <div className="flex justify-center sm:justify-start gap-4 mt-4">
-                      {profile?.friends?.length === 1 ? (
-                        <p><span className="font-bold">1</span> Friend</p>
-                      ) : (
-                        <p><span className="font-bold">{profile?.friends?.length}</span> Friends</p>
-                      )}
-                    </div>
-                    <div className="my-4">
-                      {userPosts?.map((post, index) => {
-                        return (
-                          <div key={index}>
-                            <Post id={post?.documentId} uid={post?.uid} logo={post?.logo} name={post?.name} email={post?.email} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} /> 
-                          </div>
-                        )
-                      })}
-                      {userPosts.length === 0 && <p className="text-center">No posts found</p>}
-                    </div>
-                  </div>
                 ) : (
-                  <div>
-                    <div className="flex items-center py-4">
-                      <Avatar sx={{ width: 52, height: 52 }} src={updatedProfile.image || avatar} alt="avatar" />
-                      <div className="w-24 sm:w-auto">
-                        <label htmlFor="image-upload" className="ml-4 text-center">
-                          <input id="image-upload" type="file" onChange={handleImageChange} style={{ display: 'none' }} />
-                          <Button variant="contained" component="span">Change Image</Button>
-                        </label>
-                      </div>
+                    <div>
+                        <div className="flex items-center py-4">
+                            <Avatar sx={{ width: 52, height: 52 }} src={previewImage || updatedProfile.image || avatar} />
+                            <div className="flex items-center w-24 sm:w-auto">
+                                <label htmlFor="img-upload" className="ml-4 text-center">
+                                    <input id="img-upload" type="file" onChange={handleImageChange} style={{display: 'none'}} />
+                                    <p className="text-sm font-semibold text-blue-700">CHANGE IMAGE</p>
+                                </label>
+                                <Button onClick={removeProfilePicture}>Remove Image</Button>
+                            </div>
+                        </div>
+                        <div className="flex flex-col justify-center gap-4">
+                            <input className="p-2 w-[90%] md:w-[60%] border-none outline-none cursor-pointer" name="name" value={updatedProfile.name || ""} onChange={handleChange} placeholder="Name" />
+                            <textarea className="p-2 w-[90%] md:w-[60%] border-none outline-none resize-none cursor-pointer" name="bio" value={updatedProfile.bio || ""} onChange={handleChange} placeholder="Bio" />
+                        </div>
+                        <div className="flex gap-2 my-4">
+                            <Button variant="contained" onClick={handleSave}>Save</Button>
+                            <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
+                        </div>
                     </div>
-                    <div className="flex flex-col justify-center gap-4">
-                      <input className="p-2 w-[90%] md:w-[60%] border-none outline-none cursor-pointer" name="name" value={updatedProfile?.name || ''} onChange={handleChange} placeholder="Name" />
-                      <textarea className="p-2 w-[90%] md:w-[60%] border-none outline-none resize-none cursor-pointer" name="bio" value={updatedProfile?.bio || ''} onChange={handleChange} placeholder="Bio" />
-                    </div>
-                    <div className="flex gap-2 my-4">
-                      <Button variant="contained" onClick={handleSave}>Save</Button>
-                      <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
-                    </div>
-                  </div>
                 )}
-              </div>
             </div>
+            
           </div>
         </div>
       </div>
