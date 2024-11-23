@@ -104,7 +104,7 @@ const Main = () => {
           <Avatar size="sm" variant="circular" src={userData?.image || avatar} alt="avatar" />
           <form className="w-full" onSubmit={handlePostSubmit}>
             <div className="ml-4 flex justify-between items-center">
-              <Input sx={{ fontSize: "14px" }} disableUnderline fullWidth placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
+              <input className="w-full text-sm sm:text-md border-none outline-none" placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
               {state.img && <img className="h-10 rounded-lg mx-3" src={state.img} alt="preview" />}
               <Button type="submit" disabled={isDisabled}>
                 <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{ color: isDisabled ? "#74C0FC" : "#2071c9" }} />

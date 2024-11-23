@@ -91,7 +91,7 @@ const NavLinks = () => {
         <Tooltip title="Sign Out" placement="bottom">
             <Avatar src={userData?.image || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
         </Tooltip>
-        <p className="ml-4 font-roboto text-sm text-black font-medium no-underline">
+        <p className="hidden sm:block ml-4 font-roboto text-sm text-black font-medium no-underline">
           {user?.displayName === null && userData?.name !== undefined ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1) : user?.displayName?.split(" ")[0]}
         </p>
       </div>
