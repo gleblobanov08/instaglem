@@ -20,7 +20,9 @@ const UserChats = () => {
     const unsubscribe = onSnapshot(q, async (querySnapshot) => {
       const fetchedChats = [];
       querySnapshot.forEach((doc) => {
-        fetchedChats.push({ id: doc.id, ...doc.data() })
+        if (doc.data().users.includes(user.uid)) {
+          fetchedChats.push({ id: doc.id, ...doc.data() })
+        }
       });
       const chatsWithFriendInfo = await Promise.all(
         fetchedChats.map(async chat => {
@@ -86,8 +88,8 @@ const UserChats = () => {
         ) : (
           <ul className="chat-list">
             {chats.map((chat) => (
-              <Link to={`/chat/${chat.id}`}>
-              <li key={chat.id} className="chat-item">
+              <Link to={`/chat/${chat.id}`} key={chat.id}>
+              <li className="chat-item">
                 <div className="avatar">
                   <img src={chat.friendAvatar || avatar} alt="avatar"/>
                 </div>
