@@ -83,13 +83,10 @@ const Main = () => {
     const fetchPosts = async () => {
       try {
         const q = query(collectionRef, orderBy("timestamp", "desc"), limit(10));
-        //const querySnapshot = await getDocs(q);
         await onSnapshot(q, (doc) => {
           const fetchedPosts = doc.docs.map((item) => item.data());
           setState({posts: fetchedPosts});
         })
-        //const fetchedPosts = querySnapshot.docs.map((doc) => doc.data());
-        //setState({ posts: fetchedPosts });
       } catch (err) {
         console.error("Error fetching posts:", err);
         setState({ error: "Failed to fetch posts." });
@@ -107,7 +104,7 @@ const Main = () => {
           <Avatar size="sm" variant="circular" src={userData?.image || avatar} alt="avatar" />
           <form className="w-full" onSubmit={handlePostSubmit}>
             <div className="ml-4 flex justify-between items-center">
-              <Input sx={{ fontSize: "15px" }} disableUnderline fullWidth placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
+              <Input sx={{ fontSize: "14px" }} disableUnderline fullWidth placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
               {state.img && <img className="h-10 rounded-lg mx-3" src={state.img} alt="preview" />}
               <Button type="submit" disabled={isDisabled}>
                 <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{ color: isDisabled ? "#74C0FC" : "#2071c9" }} />
@@ -116,7 +113,7 @@ const Main = () => {
           </form>
         </div>
         <span style={{ width: `${state.progressBar}%` }} className="bg-blue-700 py-1"></span>
-        <div className="flex justify-evenly items-center mt-4">
+        <div className="flex justify-evenly items-center mt-2 md:mt-4">
           <label htmlFor="addImage" className="cursor-pointer">
             <FontAwesomeIcon icon={faPaperclip} className="h-6 mr-4 hover:text-blue-900" />
             <input id="addImage" type="file" className="hidden" onChange={handleUpload} />

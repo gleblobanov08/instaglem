@@ -161,7 +161,7 @@ const Profile = () => {
         <div className="flex-auto w-[30%] md:w-[25%] fixed top-12">
             <LeftItems />
         </div>
-        <div className="flex-auto w-[70%] md:w-[75%] absolute left-30% md:left-[25%] top-10 bg-gray-100 rounded-xl">
+        <div className="flex-auto w-[70%] md:w-[75%] absolute left-[30%] md:left-[25%] top-10 bg-gray-100 rounded-xl">
           <div className="w-[90%] mx-auto py-2">
               <div className="border-b border-gray-200 ml-2 sm:ml-4 py-4 flex items-center">
                 <Link to="/">
@@ -200,9 +200,11 @@ const Profile = () => {
                             <div className="flex items-center w-24 sm:w-auto">
                                 <label htmlFor="img-upload" className="ml-4 text-center">
                                     <input id="img-upload" type="file" onChange={handleImageChange} style={{display: 'none'}} />
-                                    <p className="text-sm font-semibold text-blue-700">CHANGE IMAGE</p>
+                                    <p className="uppercase text-sm font-semibold text-blue-700">Change Image</p>
                                 </label>
-                                <Button onClick={removeProfilePicture}>Remove Image</Button>
+                                <button className="ml-3 md:ml-6 broder-none bg-transparent" onClick={removeProfilePicture}>
+                                  <p className="uppercase text-sm font-semibold text-blue-700">Remove Image</p>
+                                </button>
                             </div>
                         </div>
                         <div className="flex flex-col justify-center gap-4">
