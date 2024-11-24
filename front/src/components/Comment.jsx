@@ -27,7 +27,7 @@ const Comment = ({ uid, comment }) => {
   return (
     <div className="flex items-center mt-2 w-full">
       <div className="mx-2">
-        <Avatar size="sm" alt="avatar" variant="circular" src={author.image || avatar} />
+        <Avatar size="sm" alt="avatar" variant="circular" src={author.photoURL || avatar} />
       </div>
       <div className="flex flex-col items-start bg-gray-100 rounded-2xl p-1 max-w-[600px]">
         <p className="font-roboto text-black text-xs sm:text-sm no-underline tracking-normal leading-none p-1 font-medium">{author.name}</p>

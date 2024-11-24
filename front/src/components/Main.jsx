@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer, useMemo } from "react";
-import { Alert, Avatar, Button, Input } from "@mui/material";
+import { Alert, Avatar, Button } from "@mui/material";
 import avatar from "../assets/avatar.png";
 import { AuthContext } from "../context/AppContext";
 import { collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
@@ -101,10 +101,10 @@ const Main = () => {
     <div className="flex flex-col items-center">
       <div className="flex flex-col py-3 sm:py-4 w-full bg-white rounded-2xl shadow-lg">
         <div className="flex items-center border-b-2 border-gray-300 pb-4 pl-2 sm:pl-4">
-          <Avatar size="sm" variant="circular" src={userData?.image || avatar} alt="avatar" />
+          <Avatar size="sm" variant="circular" src={userData?.photoURL || avatar} alt="avatar" />
           <form className="w-full" onSubmit={handlePostSubmit}>
             <div className="ml-4 flex justify-between items-center">
-              <input className="w-full text-sm sm:text-md border-none outline-none" placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
+              <input className="w-full text-sm sm:text-md border-none outline-none" maxLength="280" placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
               {state.img && <img className="h-10 rounded-lg mx-3" src={state.img} alt="preview" />}
               <Button type="submit" disabled={isDisabled}>
                 <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{ color: isDisabled ? "#74C0FC" : "#2071c9" }} />

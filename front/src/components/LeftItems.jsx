@@ -32,6 +32,14 @@ const LeftItems = () => {
         await updateDoc(doc(db, "users", userDocumentId), {
             friends: arrayRemove({id: id, name: name, image: image})
         })
+
+        const frQ = query(collection(db, "users"), where("uid", "==", id));
+        const frGetDoc = await getDocs(frQ);
+        const frUserDocumentId = frGetDoc.docs[0].id;
+
+        await updateDoc(doc(db, "users", frUserDocumentId), {
+            friends: arrayRemove({id: user?.uid, name: userData?.name, image: user?.photoURL})
+        })
     }
 
     const startConversation = async (friendId) => {
@@ -64,11 +72,11 @@ const LeftItems = () => {
         }
 
     return (
-        <div className="flex flex-col h-screen bg-white pb-4 px-1 border-none rounded-r-xl shadow-lg">
+        <div className="flex flex-col h-screen bg-white pb-4 border-none rounded-r-xl shadow-lg">
             <div className="flex flex-col items-center">
                 <div className="mt-4">
                     <Tooltip title="Profile" placement="top">
-                        <Avatar src={userData?.image || avatar} sx={{height: 46, width: 46}} alt="avatar"></Avatar>
+                        <Avatar src={userData?.photoURL || avatar} sx={{height: 46, width: 46}} alt="avatar"></Avatar>
                     </Tooltip>
                 </div>
             </div> 
@@ -76,13 +84,13 @@ const LeftItems = () => {
                 <p className="hidden sm:block font-roboto font-medium text-xs sm:text-sm md:text-md xl:text-lg text-gray-700 no-underline tracking-normal leading-none mb-2">{user?.email || userData?.email}</p>
                 <p className="font-roboto font-bold text-sm text-center text-gray-700 no-underline tracking-normal py-3">Become a premium member</p>
             </div>
-            <div className="flex flex-col pl-2">
+            <div className="flex flex-col">
                 <div className="hidden sm:flex items-center pb-4">
-                    <img className="h-10 mr-2" src={location} alt="location" />
+                    <img className="h-10 mx-2" src={location} alt="location" />
                     <p className="font-roboto font-bold text-sm md:text-md lg:text-lg no-underline tracking-normal leading-none">Wakanda</p>
                 </div>
                 <div className="hidden sm:flex items-center">
-                    <img className="h-10 mr-2" src={job} alt="job" />
+                    <img className="h-10 mx-2" src={job} alt="job" />
                     <p className="font-roboto font-bold text-sm md:text-md lg:text-lg no-underline tracking-normal leading-none">Full-time unemployed</p>
                 </div>
                 <div className="mt-8">
@@ -93,23 +101,25 @@ const LeftItems = () => {
                     {friendList?.length > 0 ? (
                         searchFriends(friendList)?.map((friend) => {
                             return (
-                                <div className="mr-1 md:mr-2 lg:mr-4 flex flex-wrap items-center justify-between hover:bg-gray-100 duration-300 ease-in-out" key={friend.id}>
-                                    <div className="w-full sm:w-auto">
-                                        <Link to={`/profile/${friend.id}`}>
-                                            <div className="flex items-center my-2 cursor-pointer justify-center">
-                                                <div className="flex items-center">
-                                                    <Avatar size="sm" variant="circular" src={friend?.image || avatar} alt="avatar" />
-                                                    <p className="hidden sm:block ml-4 font-roboto font-medium text-xs md:text-sm text-gray-700 no-underline tracking-normal leading-none">{friend.name}</p>
+                                <div className="w-full hover:bg-gray-100 duration-300 ease-in-out" key={friend.id}>
+                                    <div className="mr-1 md:mr-2 lg:mr-4 flex flex-wrap items-center justify-between">
+                                        <div className="w-full sm:w-auto">
+                                            <Link to={`/profile/${friend.id}`}>
+                                                <div className="flex items-center pl-2 my-2 cursor-pointer justify-center">
+                                                    <div className="flex items-center">
+                                                        <Avatar size="sm" variant="circular" src={friend?.image || avatar} alt="avatar" />
+                                                        <p className="hidden sm:block ml-4 font-roboto font-medium text-xs md:text-sm text-gray-700 no-underline tracking-normal leading-none">{friend.name}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                    <div className="w-full sm:w-auto flex justify-center gap-4">
-                                        <div className="cursor-pointer" onClick={() => startConversation(friend.id)}>
-                                            <FontAwesomeIcon icon={faCommentDots} className="text-blue-300 hover:text-blue-700"></FontAwesomeIcon>
+                                            </Link>
                                         </div>
-                                        <div className="cursor-pointer" onClick={() => removeFriend(friend.id, friend.name, friend.image)}>
-                                            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                                        <div className="w-full sm:w-auto flex justify-center gap-4">
+                                            <div className="cursor-pointer" onClick={() => startConversation(friend.id)}>
+                                                <FontAwesomeIcon icon={faCommentDots} className="text-blue-300 hover:text-blue-700"></FontAwesomeIcon>
+                                            </div>
+                                            <div className="cursor-pointer" onClick={() => removeFriend(friend.id, friend.name, friend.image)}>
+                                                <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

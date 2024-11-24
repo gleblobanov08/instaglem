@@ -63,7 +63,7 @@ const Profile = () => {
   };
 
   const removeProfilePicture = () => {
-    setUpdatedProfile({ ...updatedProfile, image: "" });
+    setUpdatedProfile({ ...updatedProfile, photoURL: "" });
     setPreviewImage("");
     setNewImageFile(null);
   };
@@ -106,16 +106,16 @@ const Profile = () => {
 
       const userDocRef = userSnapshot.docs[0].ref;
 
-      let imageUrl = updatedProfile.image;
+      let imageUrl = updatedProfile.photoURL;
       if (newImageFile) {
         imageUrl = await uploadImageToCloudinary(newImageFile);
       }
 
-      await updateDoc(userDocRef, { ...updatedProfile, image: imageUrl });
+      await updateDoc(userDocRef, { ...updatedProfile, photoURL: imageUrl });
 
       await updateFriendsList(profile.uid, updatedProfile.name, imageUrl);
       setEditing(false);
-      setProfile({ ...updatedProfile, image: imageUrl });
+      setProfile({ ...updatedProfile, photoURL: imageUrl });
       setNewImageFile(null);
       setPreviewImage("");
     } catch (err) {
@@ -175,7 +175,7 @@ const Profile = () => {
                 {!editing || !isCurrentUser ? (
                     <div>
                         <div className="flex justify-center sm:justify-between gap-6 items-center py-4">
-                            <Avatar sx={{ width: 52, height: 52 }} src={profile?.image || avatar} />
+                            <Avatar sx={{ width: 52, height: 52 }} src={profile?.photoURL || avatar} />
                             {isCurrentUser && <Button onClick={handleEdit}>Edit</Button>}
                         </div>
                         <div className="text-center sm:text-left">
@@ -196,11 +196,11 @@ const Profile = () => {
                 ) : (
                     <div>
                         <div className="flex items-center py-4">
-                            <Avatar sx={{ width: 52, height: 52 }} src={previewImage || updatedProfile.image || avatar} />
+                            <Avatar sx={{ width: 52, height: 52 }} src={previewImage || updatedProfile.photoURL || avatar} />
                             <div className="flex items-center w-24 sm:w-auto">
                                 <label htmlFor="img-upload" className="ml-4 text-center">
                                     <input id="img-upload" type="file" onChange={handleImageChange} style={{display: 'none'}} />
-                                    <p className="uppercase text-sm font-semibold text-blue-700">Change Image</p>
+                                    <p className="cursor-pointer uppercase text-sm font-semibold text-blue-700">Change Image</p>
                                 </label>
                                 <button className="ml-3 md:ml-6 broder-none bg-transparent" onClick={removeProfilePicture}>
                                   <p className="uppercase text-sm font-semibold text-blue-700">Remove Image</p>
@@ -208,8 +208,8 @@ const Profile = () => {
                             </div>
                         </div>
                         <div className="flex flex-col justify-center gap-4">
-                            <input className="p-2 w-[90%] md:w-[60%] border-none outline-none cursor-pointer" name="name" value={updatedProfile.name || ""} onChange={handleChange} placeholder="Name" />
-                            <textarea className="p-2 w-[90%] md:w-[60%] border-none outline-none resize-none cursor-pointer" name="bio" value={updatedProfile.bio || ""} onChange={handleChange} placeholder="Bio" />
+                            <input className="p-2 w-[90%] md:w-[60%] border-none outline-none cursor-pointer" name="name" maxLength="15" value={updatedProfile.name || ""} onChange={handleChange} placeholder="Name" />
+                            <textarea className="p-2 w-[90%] md:w-[60%] border-none outline-none resize-none cursor-pointer" maxLength="100" name="bio" value={updatedProfile.bio || ""} onChange={handleChange} placeholder="Bio" />
                         </div>
                         <div className="flex gap-2 my-4">
                             <Button variant="contained" onClick={handleSave}>Save</Button>

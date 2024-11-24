@@ -30,8 +30,8 @@ const Login = () => {
       };
     
       const validationSchema = Yup.object({
-        email: Yup.string().email("Invalid email address").required("Required"),
-        password: Yup.string().required("Required").min("6", "Password isn't long enough").matches(/^[a-zA-Z0-9]+$/, "Password is too good"),
+        email: Yup.string().email("Invalid email address").required("Required").min("8", "C'mon, email is fake").max("30", "Bruh, why so short?"),
+        password: Yup.string().required("Required").min("6", "Password isn't long enough").max("20", "Password is too long").matches(/^[a-zA-Z0-9]+$/, "Password is too good"),
       });
     
       const handleSubmit = (e) => {

@@ -31,9 +31,9 @@ const Signup = () => {
       };
     
       const validationSchema = Yup.object({
-        name: Yup.string().required("Required").min("3", "Username isn't long enough").matches(/^[a-zA-Z0-9]+$/, "Name can only contain letters (and numbers)"),
-        email: Yup.string().email("Invalid email address").required("Required"),
-        password: Yup.string().required("Required").min("6", "Password isn't long enough").matches(/^[a-zA-Z0-9]+$/, "Password is too strong. How should I steal it?"),
+        name: Yup.string().required("Required").min("3", "Username isn't long enough").max("15", "I have hippopotomonstrosesquippedaliophobia, so your name is scary").matches(/^[a-zA-Z0-9]+$/, "Name can only contain letters (and numbers)"),
+        email: Yup.string().email("Invalid email address").required("Required").min("8", "Oh, do you think it looks ok?").max("30", "Why didn't you write a whole poem?"),
+        password: Yup.string().required("Required").min("6", "Password isn't long enough").max("20", "Password is too long").matches(/^[a-zA-Z0-9]+$/, "Password is too strong. How should I steal it?"),
       });
     
       const handleSubmit = (e) => {

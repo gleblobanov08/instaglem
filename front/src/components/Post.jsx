@@ -41,7 +41,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
       await updateDoc(userRef, {
         friends: arrayUnion({
           id: friendData.uid,
-          image: friendData.image,
+          image: friendData.photoURL,
           name: friendData.name,
         })
       });
@@ -49,7 +49,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
       await updateDoc(friendRef, {
         friends: arrayUnion({
           id: user?.uid || userData?.uid,
-          image: user?.photoURL || userData?.image || '',
+          image: user?.photoURL || userData?.photoURL || '',
           name: user?.name || userData?.name
         })
       })
@@ -129,7 +129,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
     <div className="mb-4">
       <div className="flex flex-col py-4 bg-white rounded-2xl">
         <div className="flex justify-start items-center pb-4 pl-4 ">
-          <Avatar className="h-6" variant="circular" src={author.image || avatar} alt="avatar"></Avatar>
+          <Avatar className="h-6" variant="circular" src={author.image || author.photoURL || avatar} alt="avatar"></Avatar>
           <div className="flex flex-col ml-4 w-[90%]">
             <p className="py-2 font-roboto font-medium text-xs sm:text-sm text-gray-700 no-underline tracking-normal leading-none">
               {author.name}
@@ -145,7 +145,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
           )}
         </div>
         <div className="px-4">
-          <p className="ml-3 sm:ml-6 pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
+          <p className="text-clip overflow-scroll ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
           {image && (

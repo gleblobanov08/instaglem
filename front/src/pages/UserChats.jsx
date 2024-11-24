@@ -27,7 +27,7 @@ const UserChats = () => {
       const chatsWithFriendInfo = await Promise.all(
         fetchedChats.map(async chat => {
           const friendUID = chat.users.find(uid => uid !== user.uid); // Get the friend's UID
-          let friendData = { name: 'Unknown User', image: avatar }; // Default values
+          let friendData = { name: 'Unknown User', photoURL: avatar }; // Default values
 
          if (friendUID) {
           const q = query(collection(db, 'users'), where('uid', '==', friendUID));
@@ -38,7 +38,7 @@ const UserChats = () => {
           return {
             ...chat,
             friendName: friendData.name,
-            friendAvatar: friendData.image // Use friend's photoURL or default avatar
+            friendAvatar: friendData.photoURL // Use friend's photoURL or default avatar
           };
         })
       );

@@ -38,7 +38,7 @@ const ChatRoom = () => {
               const friendSnapshot = await getDocs(q);
               if (!friendSnapshot.empty) {
                 const friend = friendSnapshot.docs[0].data();
-                setFriendData({ name: friend.name, image: friend.image || avatar });
+                setFriendData({ name: friend.name, photoURL: friend.photoURL || avatar });
               }
             }
           }
@@ -63,11 +63,11 @@ const ChatRoom = () => {
 
     return (
         <div className="chat-conversation">
-            <div className="fixed top-0 z-10 w-full bg-white">
+            <div className="w-full bg-white">
                 <Navbar></Navbar>
             </div>
             <div className="chat-header">
-                <img src={friendData.image} alt="avatar" className="header-avatar" />
+                <img src={friendData.photoURL} alt="ava" className="header-avatar" />
                 <h3>{friendData.name}</h3>
             </div>
             <div className="messages-container">
@@ -75,7 +75,7 @@ const ChatRoom = () => {
             </div>
             <span ref={dummy}></span>        
             <form className="form" onSubmit={sendMessage}>
-                <input className="form-input" value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Message" />
+                <input className="form-input" maxLength="280" value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Message" />
                 <button className="form-button" type="submit" disabled={!formValue}>Send</button>
             </form>            
         </div>

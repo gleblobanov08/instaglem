@@ -1,5 +1,4 @@
 .chat-conversation {
-  padding-top: 44px;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -9,7 +8,6 @@
 .chat-header {
   display: flex;
   align-items: center;
-  padding: 15px 30px;
   background-color: #81d4fa;
   color: #fff;
 }
@@ -66,6 +64,9 @@
     padding: 10px 24px;
     font-size: 1rem;
   }
+  .chat-header {
+    padding: 12px 20px;
+  }
 }
 
 @media screen and (min-width: 540px) {
@@ -76,6 +77,9 @@
   .form-button {
     padding: 15px 32px;
     font-size: 1.25rem;
+  }
+  .chat-header {
+    padding: 15px 30px;
   }
 }
 .form {

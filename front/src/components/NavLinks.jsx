@@ -89,7 +89,7 @@ const NavLinks = () => {
       </Tooltip>
       <div className="mx-4 flex items-center" onClick={signOutUser}>
         <Tooltip title="Sign Out" placement="bottom">
-            <Avatar src={userData?.image || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
+            <Avatar src={userData?.photoURL || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
         </Tooltip>
         <p className="hidden sm:block ml-4 font-roboto text-sm text-black font-medium no-underline">
           {user?.displayName === null && userData?.name !== undefined ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1) : user?.displayName?.split(" ")[0]}

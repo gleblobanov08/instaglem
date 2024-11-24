@@ -57,11 +57,11 @@ const CommentSection = ({ postId }) => {
         <div className="flex flex-col bg-white w-full py-2 rounded-b-3xl">
             <div className="flex items-center">
                 <div className="mx-2">
-                    <Avatar size="sm" variant="circular" src={userData?.image || avatar} />
+                    <Avatar size="sm" variant="circular" src={userData?.photoURL || avatar} />
                 </div>
                 <div className="w-full pr-2">
                     <form className="flex items-center w-full" onSubmit={addComment}>
-                        <input name="comment" type="text" placeholder="Write a comment..." className="w-full text-xs sm:text-sm rounded-2xl outline-none border-0 p-2 bg-gray-100" ref={comment} />
+                        <input name="comment" maxLength="280" type="text" placeholder="Write a comment..." className="w-full text-xs sm:text-sm rounded-2xl outline-none border-0 p-2 bg-gray-100" ref={comment} />
                         <button className="hidden" type="submit">Submit</button>
                     </form>
                 </div>
