@@ -89,7 +89,7 @@ const ChatMessage = (props) => {
   
     return (
         <div className={`message ${messageClass}`}>
-            <p className="message-text">{text}</p>
+            <p className="message-text overflow-scroll">{text}</p>
         </div>
     )
 }

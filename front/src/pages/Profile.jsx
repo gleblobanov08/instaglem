@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { collection, getDocs, onSnapshot, query, where, updateDoc, limit } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 import { auth, db } from "../data/firebase";
@@ -9,6 +9,7 @@ import { Avatar, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Post from "../components/Post";
+import { AuthContext } from "../context/AppContext";
 
 const uploadImageToCloudinary = async (file) => {
   const formData = new FormData();
@@ -26,6 +27,7 @@ const uploadImageToCloudinary = async (file) => {
 const Profile = () => {
   const currentUser = auth.currentUser;
   const { id } = useParams();
+  const { signOutUser } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [editing, setEditing] = useState(false);
@@ -192,6 +194,7 @@ const Profile = () => {
                             ))}
                             {userPosts.length === 0 && <p className="text-center">No posts found</p>}
                         </div>
+                        {isCurrentUser && <div onClick={signOutUser} className="cursor-pointer font-bold text-center text-red-600">Sign Out</div>}
                     </div>
                 ) : (
                     <div>

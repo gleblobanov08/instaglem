@@ -13,6 +13,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
   const { user, userData } = useContext(AuthContext);
   const [author, setAuthor] = useState({});
   const [state, dispatch] = useReducer(PostReducer, postStates);
+  const [likes, setLikes] = useState([]);
   const likesCollection = collection(db, "posts", id, "likes");
   const singlePostDocument = doc(db, "posts", id);
   const { ADD_LIKE, HANDLE_ERROR } = postActions;
@@ -111,10 +112,12 @@ const Post = ({ uid, id, text, image, timestamp }) => {
       try {
         const q = collection(db, "posts", id, "likes");
         await onSnapshot(q, (doc) => {
-          dispatch({
+          /*dispatch({
             type: ADD_LIKE,
             likes: doc.docs.map((item) => item.data()),
           });
+          */
+         setLikes(doc.docs?.map((item) => item.data()));
         });
       } catch (err) {
         dispatch({ type: HANDLE_ERROR });
@@ -155,7 +158,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
         <div className="flex justify-around items-center pt-4">
           <button className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleLike}>
             <FontAwesomeIcon className="h-5 sm:h-6 mr-3 sm:mr-4 text-red-700" icon={faHeart}></FontAwesomeIcon>
-            {state.likes?.length > 0 && state?.likes?.length}
+            {likes?.length > 0 && likes?.length}
           </button>
           <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleOpen}>
             <div className="flex items-center cursor-pointer">
@@ -174,8 +177,8 @@ const Post = ({ uid, id, text, image, timestamp }) => {
             </div>
           }
         </div>
+        {open && <CommentSection postId={id}></CommentSection>}
       </div>
-      {open && <CommentSection postId={id}></CommentSection>}
     </div>
   );
 };

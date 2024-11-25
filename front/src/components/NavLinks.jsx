@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Avatar, Tooltip } from "@mui/material";
 import { AuthContext } from "../context/AppContext";
 import avatar from '../assets/avatar.png';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 const NavLinks = () => {
   const { signOutUser, user, userData } = useContext(AuthContext);
@@ -49,28 +51,8 @@ const NavLinks = () => {
           </div>
         </Tooltip>
       </Link>
-      <Link to={`/profile/${user?.uid}`}>
-        <Tooltip title="Profile" placement="bottom">
-          <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-          </div>
-        </Tooltip>
-      </Link>
       <Tooltip title="Coming soon..." placement="bottom">
-        <div className="ml-4 hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
+        <div className="mr-4 hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -87,9 +69,14 @@ const NavLinks = () => {
           </svg>
         </div>
       </Tooltip>
+      <Link to={`/profile/${user?.uid}`}>
+        <Tooltip title="Profile" placement="bottom">
+          <Avatar src={userData?.photoURL || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
+        </Tooltip>
+      </Link>
       <div className="mx-4 flex items-center" onClick={signOutUser}>
         <Tooltip title="Sign Out" placement="bottom">
-            <Avatar src={userData?.photoURL || avatar} alt="user" sx={{height: 26, width: 26}}></Avatar>
+            <FontAwesomeIcon icon={faRightToBracket} />
         </Tooltip>
         <p className="hidden sm:block ml-4 font-roboto text-sm text-black font-medium no-underline">
           {user?.displayName === null && userData?.name !== undefined ? userData?.name?.charAt(0)?.toUpperCase() + userData?.name?.slice(1) : user?.displayName?.split(" ")[0]}

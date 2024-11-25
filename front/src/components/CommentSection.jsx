@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useReducer, useRef } from "react";
+import React, { useContext, useEffect, useReducer, useRef, useState } from "react";
 import { AuthContext } from "../context/AppContext";
 import { postActions, PostReducer, postStates } from "../context/PostReducer";
-import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../data/firebase";
 import { Avatar } from "@mui/material";
 import avatar from "../assets/avatar.png";
@@ -13,6 +13,7 @@ const CommentSection = ({ postId }) => {
     const commentRef = doc(collection(db, "posts", postId, "comments"));
     const [state, dispatch] = useReducer(PostReducer, postStates);
     const { ADD_COMMENT, HANDLE_ERROR } = postActions;
+    const [comments, setComments] = useState([]);
 
     const addComment = async (e) => {
         e.preventDefault();
@@ -37,12 +38,13 @@ const CommentSection = ({ postId }) => {
         const getComments = async () => {
             try {
                 const commentsCollection = collection(db, `posts/${postId}/comments`);
-                const q = query(commentsCollection, orderBy("timestamp", "desc"));
+                const q = query(commentsCollection, orderBy("timestamp", "desc"), limit(5));
                 await onSnapshot(q, (doc) => {
-                    dispatch({
+                    /*dispatch({
                         type: ADD_COMMENT,
                         comments: doc.docs?.map((item) => item.data())
-                    });
+                    });*/
+                    setComments(doc.docs?.map(((item) => item.data())))
                 });
             } catch (err) {
                 dispatch({ type: HANDLE_ERROR });
@@ -66,7 +68,7 @@ const CommentSection = ({ postId }) => {
                     </form>
                 </div>
             </div>
-            {state?.comments?.map((comment, index) => {
+            {comments?.map((comment, index) => {
                 return (
                     <Comment key={index} uid={comment?.authorId} comment={comment?.comment}></Comment>
                 );
@@ -76,3 +78,4 @@ const CommentSection = ({ postId }) => {
 }
 
 export default CommentSection;
+//Error: this.requestMonitor is undefined
