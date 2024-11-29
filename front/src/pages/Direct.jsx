@@ -75,7 +75,7 @@ const ChatRoom = () => {
             </div>
             <span ref={dummy}></span>        
             <form className="form" onSubmit={sendMessage}>
-                <input className="form-input" maxLength="280" value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Message" />
+                <input className="break-words form-input" maxLength="280" value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Message" />
                 <button className="form-button" type="submit" disabled={!formValue}>Send</button>
             </form>            
         </div>
@@ -89,7 +89,7 @@ const ChatMessage = (props) => {
   
     return (
         <div className={`message ${messageClass}`}>
-            <p className="message-text overflow-scroll">{text}</p>
+            <p className="break-words message-text overflow-scroll">{text}</p>
         </div>
     )
 }

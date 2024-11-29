@@ -8,6 +8,7 @@ import { PostReducer, postActions, postStates } from "../context/PostReducer";
 import { doc, setDoc, collection, query, onSnapshot, where, getDocs, updateDoc, arrayUnion, deleteDoc} from "firebase/firestore";
 import { db } from "../data/firebase";
 import CommentSection from "./CommentSection";
+import LikeButton from "./LikeButton";
 
 const Post = ({ uid, id, text, image, timestamp }) => {
   const { user, userData } = useContext(AuthContext);
@@ -148,7 +149,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
           )}
         </div>
         <div className="px-4">
-          <p className="text-clip overflow-scroll ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
+          <p className="break-words text-clip overflow-scroll ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
           {image && (
@@ -156,10 +157,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
           )}
         </div>
         <div className="flex justify-around items-center pt-4">
-          <button className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleLike}>
-            <FontAwesomeIcon className="h-5 sm:h-6 mr-3 sm:mr-4 text-red-700" icon={faHeart}></FontAwesomeIcon>
-            {likes?.length > 0 && likes?.length}
-          </button>
+          <LikeButton postId={id} />
           <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={handleOpen}>
             <div className="flex items-center cursor-pointer">
                 <FontAwesomeIcon className="h-5 sm:h-6 mr-3 sm:mr-4 text-blue-700" icon={faComment}></FontAwesomeIcon>

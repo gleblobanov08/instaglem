@@ -183,7 +183,7 @@ const Profile = () => {
                         <div className="text-center sm:text-left">
                             <h2 className="text-xl font-bold">{profile?.name}</h2>
                             <p className="text-gray-500">{profile?.email}</p>
-                            <p className="mt-2">{profile?.bio}</p>
+                            <p className="break-words mt-2">{profile?.bio}</p>
                         </div>                    
                         <div className="flex justify-center sm:justify-start gap-4 mt-4">
                             <span className="font-bold">{profile?.friends?.length}</span> Friends
@@ -212,7 +212,7 @@ const Profile = () => {
                         </div>
                         <div className="flex flex-col justify-center gap-4">
                             <input className="p-2 w-[90%] md:w-[60%] border-none outline-none cursor-pointer" name="name" maxLength="15" value={updatedProfile.name || ""} onChange={handleChange} placeholder="Name" />
-                            <textarea className="p-2 w-[90%] md:w-[60%] border-none outline-none resize-none cursor-pointer" maxLength="100" name="bio" value={updatedProfile.bio || ""} onChange={handleChange} placeholder="Bio" />
+                            <textarea className="break-words p-2 w-[90%] md:w-[60%] border-none outline-none resize-none cursor-pointer" maxLength="100" name="bio" value={updatedProfile.bio || ""} onChange={handleChange} placeholder="Bio" />
                         </div>
                         <div className="flex gap-2 my-4">
                             <Button variant="contained" onClick={handleSave}>Save</Button>
