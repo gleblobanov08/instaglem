@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect, useReducer } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Avatar } from "@mui/material";
 import avatar from "../assets/avatar.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faHeart, faTrash, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faTrash, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AppContext";
-import { PostReducer, postActions, postStates } from "../context/PostReducer";
-import { doc, setDoc, collection, query, onSnapshot, where, getDocs, updateDoc, arrayUnion, deleteDoc} from "firebase/firestore";
+import { doc, collection, query, where, getDocs, updateDoc, arrayUnion, deleteDoc} from "firebase/firestore";
 import { db } from "../data/firebase";
 import CommentSection from "./CommentSection";
 import LikeButton from "./LikeButton";
@@ -13,11 +12,7 @@ import LikeButton from "./LikeButton";
 const Post = ({ uid, id, text, image, timestamp }) => {
   const { user, userData } = useContext(AuthContext);
   const [author, setAuthor] = useState({});
-  const [state, dispatch] = useReducer(PostReducer, postStates);
-  const [likes, setLikes] = useState([]);
-  const likesCollection = collection(db, "posts", id, "likes");
   const singlePostDocument = doc(db, "posts", id);
-  const { ADD_LIKE, HANDLE_ERROR } = postActions;
   const [open, setOpen] = useState(false);
 
   const handleOpen = (e) => {
@@ -61,26 +56,6 @@ const Post = ({ uid, id, text, image, timestamp }) => {
     }
   };
 
-  const handleLike = async (e) => {
-    e.preventDefault();
-    const q = query(likesCollection, where("id", "==", user?.uid));
-    const querySnapshot = await getDocs(q);
-    const likesDocId = await querySnapshot?.docs[0]?.id;
-    try {
-      if (likesDocId !== undefined) {
-        const deleteId = doc(db, "posts", id, "likes", likesDocId);
-        await deleteDoc(deleteId);
-      } else {
-        await setDoc(doc(likesCollection), {
-          id: user?.uid,
-        });
-      }
-    } catch (err) {
-      alert(err.message);
-      console.log(err.message);
-    }
-  };
-
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
@@ -108,27 +83,6 @@ const Post = ({ uid, id, text, image, timestamp }) => {
     getPostAuthor();
   }, [uid]);
 
-  useEffect(() => {
-    const getLikes = async () => {
-      try {
-        const q = collection(db, "posts", id, "likes");
-        await onSnapshot(q, (doc) => {
-          /*dispatch({
-            type: ADD_LIKE,
-            likes: doc.docs.map((item) => item.data()),
-          });
-          */
-         setLikes(doc.docs?.map((item) => item.data()));
-        });
-      } catch (err) {
-        dispatch({ type: HANDLE_ERROR });
-        alert(err.message);
-        console.log(err.message);
-      }
-    };
-    return () => getLikes();
-  }, [id, ADD_LIKE, HANDLE_ERROR]);
-
   return (
     <div className="mb-4">
       <div className="flex flex-col py-4 bg-white rounded-2xl">
@@ -149,7 +103,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
           )}
         </div>
         <div className="px-4">
-          <p className="break-words text-clip overflow-scroll ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
+          <p className="break-all text-clip ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
           {image && (
