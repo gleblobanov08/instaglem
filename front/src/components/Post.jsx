@@ -103,7 +103,7 @@ const Post = ({ uid, id, text, image, timestamp }) => {
           )}
         </div>
         <div className="px-4">
-          <p className="break-all text-clip ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
+          <p className="break-words overflow-scroll text-clip ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
           {image && (
