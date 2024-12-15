@@ -7,6 +7,7 @@ import Reset from "./Reset";
 import Profile from "./Profile";
 import ChatRoom from "./Direct";
 import UserChats from "./UserChats";
+import PostSearch from "./PostSearch";
 
 const Pages = () => {
     return (
@@ -19,6 +20,7 @@ const Pages = () => {
                 <Route path="/profile/:id" element={<Profile />}></Route>
                 <Route path="/chats/:userId" element={<UserChats />}></Route>
                 <Route path="/chat/:conversationId" element={<ChatRoom />}></Route>
+                <Route path="/search" element={<PostSearch />}></Route>
             </Routes>
         </div>
     )

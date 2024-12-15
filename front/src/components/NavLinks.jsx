@@ -4,7 +4,7 @@ import { Avatar, Tooltip } from "@mui/material";
 import { AuthContext } from "../context/AppContext";
 import avatar from '../assets/avatar.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import { faRightToBracket, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const NavLinks = () => {
   const { signOutUser, user, userData } = useContext(AuthContext);
@@ -48,6 +48,13 @@ const NavLinks = () => {
                 d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
               />
             </svg>
+          </div>
+        </Tooltip>
+      </Link>
+      <Link to={"/search"}>
+        <Tooltip title="Search" placement="bottom">
+          <div className="mr-4 hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
+            <FontAwesomeIcon icon={faSearch} />
           </div>
         </Tooltip>
       </Link>
