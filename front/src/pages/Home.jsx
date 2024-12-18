@@ -1,21 +1,13 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import LeftItems from "../components/LeftItems";
 import CardSection from "../components/CardSection";
 import Main from "../components/Main";
 
 const Home = () => {
     return (
         <div className="w-full">
-            <div className="fixed top-0 z-10 w-full bg-white">
-                <Navbar></Navbar>
-            </div>
-            <div className="flex bg-gray-100">
-                <div className="flex-auto w-[30%] md:w-[25%] fixed top-12">
-                    <LeftItems></LeftItems>
-                </div>
-            </div>
-            <div className="flex-auto w-[70%] md:w-[75%] absolute left-[30%] md:left-[25%] top-12 bg-gray-100 rounded-xl">
+            <Navbar></Navbar>
+            <div className="flex-auto w-full absolute top-10 bg-gray-100 rounded-xl">
                 <div className="w-[90%] mx-auto">
                     <CardSection></CardSection>
                     <Main></Main>

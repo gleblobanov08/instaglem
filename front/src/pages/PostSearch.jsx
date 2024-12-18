@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import LeftItems from "../components/LeftItems";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../data/firebase";
 import Post from "../components/Post";
@@ -35,22 +34,17 @@ const PostSearch = () => {
 
     return (
         <div className="w-full">
-            <div className="fixed top-0 z-10 w-full bg-white">
-                <Navbar />
-            </div>
+            <Navbar/>
             <div className="flex bg-gray-100">
-                <div className="flex-auto w-[30%] md:w-[25%] fixed top-12">
-                    <LeftItems />
+              <div className="flex-auto w-full absolute top-10 bg-gray-100 rounded-xl">
+                <div className="w-[90%] mx-auto">
+                  <h1 className="font-roboto font-medium text-xl text-center my-6">Search</h1>
+                  <input className="w-full p-2 text-md mt-2 mb-6 rounded-xl border-none outline-none" type="text" name="text" placeholder="Type something..." value={currentValue} onChange={(e) => setCurrentValue(e.target.value)} />
+                  {filteredPosts.map((post, index) => (
+                    <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
+                  ))}
                 </div>
-                <div className="flex-auto w-[70%] md:w-[75%] absolute left-[30%] md:left-[25%] top-12 bg-gray-100 rounded-xl">
-                    <div className="w-[90%] mx-auto">
-                        <h1 className="font-roboto font-medium text-xl text-center my-4">Search</h1>
-                        <input className="w-full p-2 text-md mt-2 mb-6 rounded-xl border-none outline-none" type="text" name="text" placeholder="Type something..." value={currentValue} onChange={(e) => setCurrentValue(e.target.value)} />
-                        {filteredPosts.map((post, index) => (
-                            <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
-                        ))}
-                    </div>
-                </div>
+              </div>
             </div>
         </div>
     )

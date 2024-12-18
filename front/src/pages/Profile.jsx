@@ -3,7 +3,6 @@ import { collection, getDocs, onSnapshot, query, where, updateDoc, limit } from 
 import { Link, useParams } from "react-router-dom";
 import { auth, db } from "../data/firebase";
 import Navbar from "../components/Navbar";
-import LeftItems from "../components/LeftItems";
 import avatar from "../assets/avatar.png";
 import { Avatar, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -156,14 +155,9 @@ const Profile = () => {
 
   return (
     <div className="w-full">
-        <div className="fixed top-0 z-10 w-full bg-white">
-            <Navbar />
-        </div>
+      <Navbar />
       <div className="flex bg-gray-100">
-        <div className="flex-auto w-[30%] md:w-[25%] fixed top-12">
-            <LeftItems />
-        </div>
-        <div className="flex-auto w-[70%] md:w-[75%] absolute left-[30%] md:left-[25%] top-10 bg-gray-100 rounded-xl">
+        <div className="flex-auto w-full absolute top-10 bg-gray-100 rounded-xl">
           <div className="w-[90%] mx-auto py-2">
               <div className="border-b border-gray-200 ml-2 sm:ml-4 py-4 flex items-center">
                 <Link to="/">
