@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useContext } from "react";
-import { collection, getDocs, onSnapshot, query, where, updateDoc, limit } from "firebase/firestore";
+import { collection, getDocs, onSnapshot, query, where, updateDoc, limit, orderBy } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 import { auth, db } from "../data/firebase";
 import Navbar from "../components/Navbar";
@@ -134,7 +134,7 @@ const Profile = () => {
     };
 
     const getUserPosts = () => {
-      const q = query(collection(db, "posts"), where("uid", "==", id), limit(10));
+      const q = query(collection(db, "posts"), where("uid", "==", id), orderBy("timestamp", "desc"), limit(10));
       onSnapshot(q, (doc) => {
         setUserPosts(doc.docs.map((item) => item.data()));
       });
@@ -188,7 +188,7 @@ const Profile = () => {
                             ))}
                             {userPosts.length === 0 && <p className="text-center">No posts found</p>}
                         </div>
-                        {isCurrentUser && <div onClick={signOutUser} className="cursor-pointer font-bold text-center text-red-600">Sign Out</div>}
+                        {isCurrentUser && <div onClick={signOutUser} className="cursor-pointer font-bold text-center text-red-600 my-6">Sign Out</div>}
                     </div>
                 ) : (
                     <div>
@@ -215,7 +215,6 @@ const Profile = () => {
                     </div>
                 )}
             </div>
-            
           </div>
         </div>
       </div>

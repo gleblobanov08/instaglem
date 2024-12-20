@@ -89,10 +89,10 @@ const Post = ({ uid, id, text, image, timestamp }) => {
         <div className="flex justify-start items-center pb-4 pl-4 ">
           <Avatar className="h-6" variant="circular" src={author.image || author.photoURL || avatar} alt="avatar"></Avatar>
           <div className="flex flex-col ml-4 w-[90%]">
-            <p className="py-2 font-roboto font-medium text-xs sm:text-sm text-gray-700 no-underline tracking-normal leading-none">
+            <p className="py-2 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
               {author.name}
             </p>
-            <p className="hidden sm:block font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
+            <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
               {timestamp}
             </p>
           </div>

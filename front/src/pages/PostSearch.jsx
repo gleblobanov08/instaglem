@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, limit, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../data/firebase";
 import Post from "../components/Post";
 
@@ -11,7 +11,7 @@ const PostSearch = () => {
 
     useEffect(() => {
         const postsRef = collection(db, 'posts');
-        const q = query(postsRef);
+        const q = query(postsRef, orderBy("timestamp", "asc"), limit(10));
     
         const unsubscribe = onSnapshot(q, (doc) => {
           const newPosts = doc.docs.map(item => ({

@@ -62,7 +62,7 @@ const ChatRoom = () => {
     }
 
     return (
-        <div className="chat-conversation">
+        <div className="chat-conversation h-screen">
             <div className="w-full bg-white">
                 <Navbar></Navbar>
             </div>
