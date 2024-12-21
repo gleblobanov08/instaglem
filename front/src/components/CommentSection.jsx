@@ -50,7 +50,7 @@ const CommentSection = ({ postId }) => {
             </div>
             <div className="w-full pr-2">
                 <form className="flex items-center w-full" onSubmit={handleAddComment}>
-                    <input name="comment" maxLength="280" type="text" placeholder="Write a comment..." className="w-full break-words text-xs sm:text-sm rounded-2xl outline-none border-0 p-2 bg-gray-100" value={comment} onChange={(e) => setComment(e.target.value)} />
+                    <input name="comment" maxLength="280" type="text" placeholder="Write a comment..." className="w-full break-words text-xs sm:text-sm rounded-lg outline-none border-0 p-2 bg-gray-100" value={comment} onChange={(e) => setComment(e.target.value)} />
                     <button className="hidden" type="submit">Submit</button>
                 </form>
             </div>

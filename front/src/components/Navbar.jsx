@@ -214,12 +214,12 @@ const Navbar = () => {
                                                                     </div>
                                                                 </Link>
                                                             </div>
-                                                            <div className="w-full sm:w-auto flex justify-center gap-4">
+                                                            <div className="w-full sm:w-auto flex justify-center gap-4 md:gap-8">
                                                                 <div className="cursor-pointer" onClick={() => startConversation(friend.id)}>
-                                                                    <FontAwesomeIcon icon={faCommentDots} className="text-blue-300 hover:text-blue-700"></FontAwesomeIcon>
+                                                                    <FontAwesomeIcon icon={faCommentDots} className="h-4 text-blue-300 hover:text-blue-700" />
                                                                 </div>
                                                                 <div className="cursor-pointer" onClick={() => removeFriend(friend.id, friend.name, friend.image)}>
-                                                                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                                                                    <FontAwesomeIcon icon={faTrash} className="h-4"/>
                                                                 </div>
                                                             </div>
                                                         </div>

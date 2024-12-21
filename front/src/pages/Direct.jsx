@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { collection, orderBy, query, setDoc, serverTimestamp, doc, getDoc, where, getDocs } from "firebase/firestore";
 import { auth, db } from "../data/firebase";
 import { AuthContext } from "../context/AppContext";
@@ -7,6 +7,8 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import avatar from "../assets/avatar.png";
 import '../Direct.css';
 import Navbar from "../components/Navbar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const ChatRoom = () => {
     const { user } = useContext(AuthContext);
@@ -66,11 +68,14 @@ const ChatRoom = () => {
             <div className="w-full bg-white">
                 <Navbar></Navbar>
             </div>
-            <div className="chat-header">
+            <div className="relative top-10 sm:top-12 chat-header">
+                <Link to={`/chats/${user?.uid}`}>
+                    <FontAwesomeIcon icon={faArrowLeft} className="h-4 sm:h-6 mr-4"/>
+                </Link>
                 <img src={friendData.photoURL} alt="ava" className="header-avatar" />
                 <h3>{friendData.name}</h3>
             </div>
-            <div className="messages-container">
+            <div className="relative top-10 sm:top-12 messages-container">
                 {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
             </div>
             <span ref={dummy}></span>        
