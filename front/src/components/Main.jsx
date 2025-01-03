@@ -11,8 +11,7 @@ import Post from "./Post";
 const Main = () => {
   const [state, setState] = useReducer((state, action) => ({ ...state, ...action }), {
     progressBar: 0,
-    img: "",
-    file: null,
+    mediaFiles: "",
     text: "",
     posts: [],
     loading: false,
@@ -23,17 +22,18 @@ const Main = () => {
   const collectionRef = useMemo(() => collection(db, "posts"), []);
 
   const handleUpload = (e) => {
-    const selectedFile = e.target.files?.[0];
-    console.log("Selected file:", selectedFile);
-    setState({ file: selectedFile });
+    const selectedFiles = Array.from(e.target.files).slice(0, 3);
+    console.log("Selected files:", selectedFiles);
+    setState({ mediaFiles: [...state.mediaFiles, ...selectedFiles].slice(0, 3) });
   };
 
-  const uploadImageToCloudinary = async (file) => {
+  const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "ml_default");
 
-    const response = await fetch(`https://api.cloudinary.com/v1_1/dsyabbqdw/image/upload`, {
+    const resourceType = file.type.startsWith('image') ? 'image' : 'video';
+    const response = await fetch(`https://api.cloudinary.com/v1_1/dsyabbqdw/${resourceType}/upload`, {
       method: "POST",
       body: formData,
     });
@@ -41,38 +41,40 @@ const Main = () => {
     return data.secure_url;
   };
 
-  const handleImageSubmit = async () => {
-    if (!state.file) return;
+  const handleMediaSubmit = async () => {
+    if (state.mediaFiles.length === 0) return;
     try {
       setState({ loading: true });
-      const url = await uploadImageToCloudinary(state.file);
-      setState({ img: url, progressBar: 100, loading: false });
-      console.log("Image uploaded successfully:", url);
+      const urls = await Promise.all(state.mediaFiles.map(uploadToCloudinary));
+      setState({ mediaFiles: [], progressBar: 100, loading: false });
+      console.log("Media uploaded successfully:", urls);
+      return urls;
     } catch (err) {
-      setState({ error: "Failed to upload image. Please try again.", loading: false });
-      console.error("Error uploading image:", err);
+      setState({ error: "Failed to upload media. Please try again.", loading: false });
+      console.error("Error uploading media:", err);
     }
   };
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
-    if (!state.text.trim()) return;
+    if (!state.text.trim() && state.mediaFiles.length === 0) return;
     try {
+      const mediaUrls = await handleMediaSubmit();
       const postRef = doc(collectionRef);
       await setDoc(postRef, {
         documentId: postRef.id,
         uid: user?.uid || userData?.uid,
         text: state.text,
-        image: state.img,
+        mediaUrls: mediaUrls || [],
         timestamp: serverTimestamp(),
       });
-      
+
       const likesRef = doc(collection(postRef, "likes"), user?.uid);
       await setDoc(likesRef, {
         id: user?.uid
       })
 
-      setState({ text: "", img: "", file: null, progressBar: 0 });
+      setState({ text: "", mediaFiles: [], progressBar: 0 });
     } catch (err) {
       setState({ error: "Error submitting post. Please try again." });
       console.error("Error submitting post:", err);
@@ -95,7 +97,7 @@ const Main = () => {
     fetchPosts();
   }, [collectionRef]);
 
-  const isDisabled = state.text.trim() === "";
+  const isDisabled = state.text.trim() === "" && state.mediaFiles.length === 0;
 
   return (
     <div className="flex flex-col items-center">
@@ -105,9 +107,22 @@ const Main = () => {
           <form className="w-full" onSubmit={handlePostSubmit}>
             <div className="ml-4 flex justify-between items-center">
               <input className="w-full break-words text-md border-none outline-none" maxLength="280" placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
-              {state.img && <img className="h-10 rounded-lg mx-3" src={state.img} alt="preview" />}
-              <Button type="submit" disabled={isDisabled}>
-                <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{ color: isDisabled ? "#74C0FC" : "#2071c9" }} />
+              {state.mediaFiles.length > 0 && (
+                <div className="flex space-x-2 mt-2">
+                  {state.mediaFiles.map((file, index) => (
+                    <div key={index} className="relative">
+                      <button className="absolute z-0 h-10 w-full" onClick={() => setState({ mediaFiles: state.mediaFiles.filter((_, i) => i !== index) })}></button>
+                      {file.type.startsWith('image') ? (
+                        <img className="m-auto h-10 rounded-lg z-10" src={URL.createObjectURL(file)} alt={`preview ${index}`} />
+                        ) : (
+                        <video className="m-auto h-10 rounded-lg z-10" src={URL.createObjectURL(file)}/>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}  
+              <Button type="submit" disabled={isDisabled || state.loading}>
+                <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{ color: isDisabled || state.loading ? "#74C0FC" : "#2071c9" }} />
               </Button>
             </div>
           </form>
@@ -116,9 +131,9 @@ const Main = () => {
         <div className="flex justify-evenly items-center mt-2 md:mt-4">
           <label htmlFor="addImage" className="cursor-pointer">
             <FontAwesomeIcon icon={faPaperclip} className="h-6 mr-4 hover:text-blue-900" />
-            <input id="addImage" type="file" className="hidden" onChange={handleUpload} />
+            <input id="addImage" type="file" className="hidden" onChange={handleUpload} accept="image/*, video/*" multiple />
           </label>
-          <Button variant="text" onClick={handleImageSubmit} disabled={!state.file || state.loading}>
+          <Button variant="text" onClick={handleMediaSubmit} disabled={state.mediaFiles.length === 0 || state.loading}>
             {state.loading ? "Uploading..." : "Upload"}
           </Button>
         </div>
@@ -130,7 +145,7 @@ const Main = () => {
       )}
       <div className="py-4 w-full">
         {state.posts?.map((post, index) => (
-          <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
+          <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} mediaUrls={post?.mediaUrls} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
         ))}
       </div>
     </div>

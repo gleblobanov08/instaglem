@@ -9,7 +9,7 @@ import { db } from "../data/firebase";
 import CommentSection from "./CommentSection";
 import LikeButton from "./LikeButton";
 
-const Post = ({ uid, id, text, image, timestamp }) => {
+const Post = ({ uid, id, text, mediaUrls, timestamp }) => {
   const { user, userData } = useContext(AuthContext);
   const [author, setAuthor] = useState({});
   const singlePostDocument = doc(db, "posts", id);
@@ -106,8 +106,16 @@ const Post = ({ uid, id, text, image, timestamp }) => {
           <p className="break-words text-clip ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
-          {image && (
-            <img className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" src={image} alt="postImage"></img>
+          {mediaUrls && mediaUrls.length > 0 && (
+            <div className="flex flex-wrap gap-4 mb-2">
+              {mediaUrls.map((url, index) => (
+                url.includes('image') ? (
+                  <img key={index} src={url} alt={`Post media ${index}`} className="rounded-lg h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
+                ) : (
+                  <video key={index} src={url} controls className="rounded-lg h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
+                )
+              ))}
+            </div>
           )}
         </div>
         <div className="flex justify-around items-center pt-4">
