@@ -184,7 +184,7 @@ const Profile = () => {
                         </div>
                         <div className="my-4">
                             {userPosts.map((post, index) => (
-                                <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
+                                <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} mediaUrls={post?.mediaUrls} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
                             ))}
                             {userPosts.length === 0 && <p className="text-center">No posts found</p>}
                         </div>

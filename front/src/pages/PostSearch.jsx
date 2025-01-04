@@ -41,7 +41,7 @@ const PostSearch = () => {
                   <h1 className="font-roboto font-medium text-xl text-center my-6">Search</h1>
                   <input className="w-full p-2 text-md mt-2 mb-6 rounded-xl border-none outline-none" type="text" name="text" placeholder="Type something..." value={currentValue} onChange={(e) => setCurrentValue(e.target.value)} />
                   {filteredPosts.map((post, index) => (
-                    <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} image={post?.image} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
+                    <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} mediaUrls={post?.mediaUrls} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />
                   ))}
                 </div>
               </div>

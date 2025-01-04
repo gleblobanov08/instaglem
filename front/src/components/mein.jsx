@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useMemo } from "react";
+eact, { useContext, useEffect, useReducer, useMemo } from "react";
 import { Alert, Avatar, Button } from "@mui/material";
 import avatar from "../assets/avatar.png";
 import { AuthContext } from "../context/AppContext";
@@ -16,7 +16,7 @@ const Main = () => {
     posts: [],
     loading: false,
     error: null,
-    uploading: false
+    uploading: false, // New state to block uploads while modifying files
   });
 
   const { user, userData } = useContext(AuthContext);
@@ -43,7 +43,7 @@ const Main = () => {
   };
 
   const handleMediaSubmit = async () => {
-    if (state.mediaFiles.length === 0 || state.uploading) return;
+    if (state.mediaFiles.length === 0 || state.uploading) return; // Prevent accidental uploads
     try {
       setState({ uploading: true, loading: true });
       const urls = await Promise.all(state.mediaFiles.map(uploadToCloudinary));
@@ -59,8 +59,9 @@ const Main = () => {
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     if (!state.text.trim() && state.mediaFiles.length === 0) return;
+
     try {
-      const mediaUrls = await handleMediaSubmit();
+      const mediaUrls = await handleMediaSubmit(); // Upload files only when submitting the post
       const postRef = doc(collectionRef);
       await setDoc(postRef, {
         documentId: postRef.id,
@@ -71,9 +72,7 @@ const Main = () => {
       });
 
       const likesRef = doc(collection(postRef, "likes"), user?.uid);
-      await setDoc(likesRef, {
-        id: user?.uid
-      })
+      await setDoc(likesRef, { id: user?.uid });
 
       setState({ text: "", mediaFiles: [], progressBar: 0 });
     } catch (err) {
@@ -86,10 +85,10 @@ const Main = () => {
     const fetchPosts = async () => {
       try {
         const q = query(collectionRef, orderBy("timestamp", "desc"), limit(10));
-        await onSnapshot(q, (doc) => {
+        onSnapshot(q, (doc) => {
           const fetchedPosts = doc.docs.map((item) => item.data());
           setState({ posts: fetchedPosts });
-        })
+        });
       } catch (err) {
         console.error("Error fetching posts:", err);
         setState({ error: "Failed to fetch posts." });
@@ -107,27 +106,32 @@ const Main = () => {
           <Avatar size="sm" variant="circular" src={userData?.photoURL || avatar} alt="avatar" />
           <form className="w-full" onSubmit={handlePostSubmit}>
             <div className="ml-4 flex justify-between items-center">
-              <input className="w-full break-words text-md border-none outline-none" maxLength="280" placeholder="Type something..." onChange={(e) => setState({ text: e.target.value })} value={state.text} />
+              <input className="w-full text-md border-none outline-none" maxLength="280" placeholder="What's going on?" onChange={(e) => setState({ text: e.target.value })} value={state.text} />
               {state.mediaFiles.length > 0 && (
                 <div className="flex space-x-2 mt-2">
                   {state.mediaFiles.map((file, index) => (
                     <div key={index} className="relative">
-                      <button className="absolute z-0 h-10 w-full" onClick={(e) => {
-                        e.preventDefault();
-                        setState({ mediaFiles: state.mediaFiles.filter((_, i) => i !== index) });
-                      }}></button>
-                      {file.type.startsWith('image') ? (
+                      <button
+                        className="absolute z-0 h-10 w-full"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setState({ mediaFiles: state.mediaFiles.filter((_, i) => i !== index) });
+                        }}
+                      >
+                        Remove
+                      </button>
+                      {file.type.startsWith("image") ? (
                         <img className="m-auto h-10 rounded-lg z-10" src={URL.createObjectURL(file)} alt={`preview ${index}`} />
-                        ) : (
-                        <video className="m-auto h-10 rounded-lg z-10" src={URL.createObjectURL(file)}/>
+                      ) : (
+                        <video className="m-auto h-10 rounded-lg z-10" src={URL.createObjectURL(file)} />
                       )}
                     </div>
                   ))}
                 </div>
-              )}  
-              <button type="submit" disabled={isDisabled || state.loading} className="mr-4">
-                <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{ color: isDisabled || state.loading ? "#74C0FC" : "#2071c9" }} />
-              </button>
+              )}
+              <Button type="submit" disabled={isDisabled || state.loading || state.uploading}>
+                <FontAwesomeIcon icon={faPaperPlane} className="h-5 sm:h-6" style={{ color: isDisabled || state.loading || state.uploading ? "#74C0FC" : "#2071c9" }} />
+              </Button>
             </div>
           </form>
         </div>
@@ -137,16 +141,9 @@ const Main = () => {
             <FontAwesomeIcon icon={faPaperclip} className="h-6 mr-4 hover:text-blue-900" />
             <input id="addImage" type="file" className="hidden" onChange={handleUpload} accept="image/*, video/*" multiple />
           </label>
-          <Button variant="text" onClick={handleMediaSubmit} disabled={state.mediaFiles.length === 0 || state.loading}>
-            {state.loading ? "Uploading..." : "Upload"}
-          </Button>
         </div>
       </div>
-      {state.error && (
-        <Alert severity="error" className="my-4">
-          {state.error}
-        </Alert>
-      )}
+      {state.error && <Alert severity="error" className="my-4">{state.error}</Alert>}
       <div className="py-4 w-full">
         {state.posts?.map((post, index) => (
           <Post key={index} id={post?.documentId} uid={post?.uid} text={post?.text} mediaUrls={post?.mediaUrls} timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()} />

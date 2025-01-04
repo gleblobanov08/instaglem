@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Tooltip } from "@mui/material";
 import { AuthContext } from "../context/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCommentDots, faRightToBracket, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCommentDots, faRightToBracket, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import avatar from "../assets/avatar.png";
 import job from "../assets/job.png";
 import location from "../assets/location.png";
@@ -82,32 +82,15 @@ const Navbar = () => {
             <div className="fixed top-0 z-10 w-full bg-white">
                 <div className="flex justify-evenly items-center border-b border-gray-100 w-full px-4 md:px-10 py-2">
                     <button onClick={toggleModal}>
+                        <FontAwesomeIcon icon={faBars} className="h-4 mr-2 sm:mr-4"/>
+                    </button>
+                    <Link to="/">
                         <div className="mr-3 sm:mr-0 text-xl sm:text-3xl font-extra-bold text-gray-900 dark:text-white font-roboto">
                             <span className="text-transparent bg-clip-text bg-blue-400">Instaglem</span>
                         </div>
-                    </button>
+                    </Link>
                     <div className="flex justify-center item-center mx-auto">
                         <div className="flex justify-center items-center cursor-pointer">
-                            <Link to="/">
-                                <Tooltip title="Home" placement="bottom">
-                                <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
-                                    <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="1.5"
-                                    stroke="currentColor"
-                                    className="w-6 h-6"
-                                    >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                                    />
-                                    </svg>
-                                </div>
-                                </Tooltip>
-                            </Link>
                             <Link to={`/chats/${user?.uid}`}>
                                 <Tooltip title="Your chats" placement="bottom">
                                 <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
