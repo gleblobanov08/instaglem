@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Avatar } from "@mui/material";
 import avatar from "../assets/avatar.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faTrash, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faTrash, faUserPlus, faLeftLong, faRightLong } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AppContext";
 import { doc, collection, query, where, getDocs, updateDoc, arrayUnion, deleteDoc} from "firebase/firestore";
 import { db } from "../data/firebase";
@@ -14,6 +14,26 @@ const Post = ({ uid, id, text, mediaUrls, timestamp }) => {
   const [author, setAuthor] = useState({});
   const singlePostDocument = doc(db, "posts", id);
   const [open, setOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const goToPrevious = () => {
+    const isFirstSlide = currentIndex === 0
+    const newIndex = isFirstSlide ? mediaUrls.length - 1 : currentIndex - 1
+    setCurrentIndex(newIndex)
+  }
+
+  const goToNext = () => {
+    const isLastSlide = currentIndex === mediaUrls.length - 1
+    const newIndex = isLastSlide ? 0 : currentIndex + 1
+    setCurrentIndex(newIndex)
+  }
+
+  if (!mediaUrls || mediaUrls.length === 0) {
+    return null
+  }
+
+  const currentMedia = mediaUrls[currentIndex]
+  const isVideo = currentMedia.includes("video")
 
   const handleOpen = (e) => {
     e.preventDefault();
@@ -106,17 +126,31 @@ const Post = ({ uid, id, text, mediaUrls, timestamp }) => {
           <p className="break-words text-clip ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
-          {mediaUrls && mediaUrls.length > 0 && (
-            <div className="flex flex-wrap gap-4 mb-2">
-              {mediaUrls.map((url, index) => (
-                url.includes('image') ? (
-                  <img key={index} src={url} alt={`Post media ${index}`} className="rounded-lg h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
+          <div className="flex justify-center items-center">
+            {mediaUrls.length > 1 ? (
+              <>
+                <button onClick={goToPrevious} className="rounded-xl p-3 hover:bg-gray-400 transition-ease-500">
+                  <FontAwesomeIcon icon={faLeftLong} className="h-5 sm:h-6" />
+                </button>
+                {isVideo ? (
+                  <video src={currentMedia} controls className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
                 ) : (
-                  <video key={index} src={url} controls className="rounded-lg h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
-                )
-              ))}
-            </div>
-          )}
+                  <img src={currentMedia} alt={`Slide ${currentIndex}`} className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
+                )}
+                <button onClick={goToNext}>
+                  <FontAwesomeIcon icon={faRightLong} className="rounded-xl p-3 hover:bg-gray-400 transition-ease-500 h-5 sm:h-6"/>
+                </button>
+              </>
+            ) : (
+              <>
+                {isVideo ? (
+                  <video src={currentMedia} controls className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
+                ) : (
+                  <img src={currentMedia} alt={`Slide ${currentIndex}`} className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
+                )}
+              </>
+            )}
+          </div>
         </div>
         <div className="flex justify-around items-center pt-4">
           <LikeButton postId={id} />
