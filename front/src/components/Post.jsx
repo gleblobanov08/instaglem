@@ -10,52 +10,56 @@ import CommentSection from "./CommentSection"
 import LikeButton from "./LikeButton"
 
 const Post = ({ uid, id, text, mediaUrls, timestamp }) => {
-  const { user, userData } = useContext(AuthContext)
-  const [author, setAuthor] = useState({})
-  const [open, setOpen] = useState(false)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const singlePostDocument = doc(db, "posts", id)
+  const { user, userData } = useContext(AuthContext);
+  const [author, setAuthor] = useState({});
+  const [open, setOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const singlePostDocument = doc(db, "posts", id);
 
   useEffect(() => {
     const getPostAuthor = async () => {
-      const q = query(collection(db, "users"), where("uid", "==", uid))
-      const querySnapshot = await getDocs(q)
+      const q = query(collection(db, "users"), where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        setAuthor(querySnapshot.docs[0].data())
+        setAuthor(querySnapshot.docs[0].data());
       }
     }
 
-    getPostAuthor()
+    getPostAuthor();
   }, [uid])
 
   const goToPrevious = () => {
-    const isFirstSlide = currentIndex === 0
-    const newIndex = isFirstSlide ? mediaUrls.length - 1 : currentIndex - 1
-    setCurrentIndex(newIndex)
+    if (mediaUrls && mediaUrls.length > 1) {
+      const isFirstSlide = currentIndex === 0;
+      const newIndex = isFirstSlide ? mediaUrls.length - 1 : currentIndex - 1;
+      setCurrentIndex(newIndex);
+    }
   }
 
   const goToNext = () => {
-    const isLastSlide = currentIndex === mediaUrls.length - 1
-    const newIndex = isLastSlide ? 0 : currentIndex + 1
-    setCurrentIndex(newIndex)
+    if (mediaUrls && mediaUrls.length > 1) {
+      const isLastSlide = currentIndex === mediaUrls.length - 1;
+      const newIndex = isLastSlide ? 0 : currentIndex + 1;
+      setCurrentIndex(newIndex);
+    }
   }
 
   const handleOpen = (e) => {
-    e.preventDefault()
-    setOpen(!open)
+    e.preventDefault();
+    setOpen(!open);
   }
 
   const addUser = async () => {
     try {
-      const userQuery = query(collection(db, "users"), where("uid", "==", user?.uid))
-      const userDocs = await getDocs(userQuery)
-      const userRef = userDocs.docs[0].ref
+      const userQuery = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const userDocs = await getDocs(userQuery);
+      const userRef = userDocs.docs[0].ref;
 
-      const friendQuery = query(collection(db, "users"), where("uid", "==", uid))
-      const friendDoc = await getDocs(friendQuery)
-      const friendRef = friendDoc.docs[0].ref
-      const friendData = friendDoc.docs[0].data()
+      const friendQuery = query(collection(db, "users"), where("uid", "==", uid));
+      const friendDoc = await getDocs(friendQuery);
+      const friendRef = friendDoc.docs[0].ref;
+      const friendData = friendDoc.docs[0].data();
 
       await updateDoc(userRef, {
         friends: arrayUnion({
@@ -73,42 +77,33 @@ const Post = ({ uid, id, text, mediaUrls, timestamp }) => {
         }),
       })
     } catch (err) {
-      alert(err.message)
-      console.log(err.message)
+      alert(err.message);
+      console.log(err.message);
     }
   }
 
   const handleDelete = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       if (user?.uid === uid) {
-        await deleteDoc(singlePostDocument)
+        await deleteDoc(singlePostDocument);
       } else {
-        alert("You can't delete other users' posts!")
+        alert("You can't delete other users' posts!");
       }
     } catch (err) {
-      alert(err.message)
-      console.log(err.message)
+      alert(err.message);
+      console.log(err.message);
     }
   }
 
-  if (!mediaUrls || mediaUrls.length === 0) {
-    return null
-  }
-
-  const currentMedia = mediaUrls[currentIndex]
-  const isVideo = currentMedia.includes("video")
+  const currentMedia = mediaUrls && mediaUrls.length > 0 ? mediaUrls[currentIndex] : null;
+  const isVideo = currentMedia && currentMedia.includes("video");
 
   return (
     <div className="mb-4">
       <div className="flex flex-col py-4 bg-white rounded-2xl">
         <div className="flex justify-start items-center pb-4 pl-4 ">
-          <Avatar
-            className="h-6"
-            variant="circular"
-            src={author.image || author.photoURL || avatar}
-            alt="avatar"
-          ></Avatar>
+          <Avatar className="h-6" variant="circular" src={author.image || author.photoURL || avatar} alt="avatar"></Avatar>
           <div className="flex flex-col ml-4 w-[90%]">
             <p className="py-2 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
               {author.name}
@@ -127,42 +122,27 @@ const Post = ({ uid, id, text, mediaUrls, timestamp }) => {
           <p className="break-words text-clip ml-3 sm:ml-6 pb-2 sm:pb-4 font-roboto font-medium text-md sm:text-lg text-gray-700 no-underline tracking-normal">
             {text}
           </p>
-          <div className="flex justify-center items-center">
-            {mediaUrls.length > 1 ? (
-              <>
-                <button onClick={goToPrevious} className="rounded-xl p-3 hover:bg-gray-400 transition-ease-500">
-                  <FontAwesomeIcon icon={faLeftLong} className="h-5 sm:h-6" />
-                </button>
+          {currentMedia && (
+            <div className="relative w-full h-[300px] sm:h-[400px] rounded-lg overflow-hidden">
+              <div className="absolute inset-0 flex justify-center items-center">
                 {isVideo ? (
-                  <video src={currentMedia} controls className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
+                  <video src={currentMedia} controls className="max-w-full max-h-full object-contain" />
                 ) : (
-                  <img
-                    src={currentMedia || "/placeholder.svg"}
-                    alt={`Slide ${currentIndex}`}
-                    className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto"
-                  />
+                  <img src={currentMedia || "/placeholder.svg"} alt={`Slide ${currentIndex}`} className="max-w-full max-h-full object-contain" />
                 )}
-                <button onClick={goToNext}>
-                  <FontAwesomeIcon
-                    icon={faRightLong}
-                    className="rounded-xl p-3 hover:bg-gray-400 transition-ease-500 h-5 sm:h-6"
-                  />
-                </button>
-              </>
-            ) : (
-              <>
-                {isVideo ? (
-                  <video src={currentMedia} controls className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto" />
-                ) : (
-                  <img
-                    src={currentMedia || "/placeholder.svg"}
-                    alt={`Slide ${currentIndex}`}
-                    className="h-[90%] sm:h-[60%] w-[90%] sm:w-[60%] mx-auto"
-                  />
-                )}
-              </>
-            )}
-          </div>
+              </div>
+              {mediaUrls && mediaUrls.length > 1 && (
+                <>
+                  <button onClick={goToPrevious} className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all">
+                    <FontAwesomeIcon icon={faLeftLong} className="h-5 w-5" />
+                  </button>
+                  <button onClick={goToNext} className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all">
+                    <FontAwesomeIcon icon={faRightLong} className="h-5 w-5" />
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
         <div className="flex justify-around items-center pt-4">
           <LikeButton postId={id} />

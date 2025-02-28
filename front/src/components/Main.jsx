@@ -114,8 +114,7 @@ const Main = () => {
                     <div key={index} className="relative">
                       <button className="absolute z-0 h-10 w-full" onClick={(e) => {
                         e.preventDefault();
-                        setState({ mediaFiles: state.mediaFiles.filter((_, i) => i !== index) });
-                      }}></button>
+                        setState({ mediaFiles: state.mediaFiles.filter((_, i) => i !== index) });}}></button>
                       {file.type.startsWith('image') ? (
                         <img className="m-auto h-10 rounded-lg z-10" src={URL.createObjectURL(file)} alt={`preview ${index}`} />
                         ) : (
